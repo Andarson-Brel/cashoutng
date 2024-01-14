@@ -9,6 +9,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+a {
+  text-decoration: none;
+}
 li {
   list-style: none;
 }
@@ -147,6 +150,7 @@ header ul li:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 .hero-heading {
   font-size: 75px;
@@ -427,7 +431,7 @@ header ul li:hover {
   margin-left: 0.2rem;
 }
 .coin-wallet {
-  font-size: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .notif-icon-cont {
@@ -435,6 +439,7 @@ header ul li:hover {
   height: 40px;
   border-radius: 100px;
   overflow: hidden;
+  margin-right: 10px;
 }
 .notif-icon-cont .notif-icon {
   width: 100%;
@@ -639,8 +644,21 @@ option .total-desc,
   display: flex;
   justify-content: space-between;
 }
+.details-cont {
+  margin: 1rem 0;
+}
 .details-cont div {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+.walletAddressInput {
+  color: white;
+}
+.transactio-value {
+  color: #cccccc !important;
+  font-weight: bold;
+}
+.pending-style {
+  color: #ffa50d;
 }
 .user-transaction-status {
   /* font-size: 1.5rem; */
@@ -664,3 +682,10 @@ option .total-desc,
 .decline-style {
   color: #ea2d2d;
 }
+.notification-list-cont {
+  border-bottom: 0.2px solid #e5e6e5;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0;
+  cursor: pointer;
+}
+/* .coin-details-cont */

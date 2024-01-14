@@ -10,7 +10,8 @@ import { BuyCoins } from "../data";
 import TransactionContainer from "../components/TransactionContainer";
 import TradeContainer from "../components/TradeContainer";
 import AddCoin from "../components/AddCoin";
-export default function DashBoard({ coins, coinNames }) {
+import Button from "../components/button";
+export default function DashBoard({ coins, coinNames, transactionHistory }) {
   const coinsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -82,8 +83,10 @@ export default function DashBoard({ coins, coinNames }) {
               </button>
             </div>
           </DashboardContainer>
+
           <DashboardContainer width={"50%"}>
             <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
+
             <AddCoin coinList={coinNames} coins={coins} />
             {BuyCoins.map((coin, i) => (
               <CoinList
@@ -106,7 +109,10 @@ export default function DashBoard({ coins, coinNames }) {
             coins={coins}
             coinNames={coinNames}
           />
-          <TransactionContainer dashboardWidth={"50%"} />
+          <TransactionContainer
+            dashboardWidth={"50%"}
+            transactionHistory={transactionHistory}
+          />
         </div>
       </div>
     </div>
