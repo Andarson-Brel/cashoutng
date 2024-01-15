@@ -3,6 +3,7 @@ import Button from "./button";
 import Modal from "./modal";
 import { BuyCoins, TransactionHistory } from "../data";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 function SellCoinForm({
   formType,
@@ -25,6 +26,8 @@ function SellCoinForm({
 
     if (quantity > 0 && selectedCoin) {
       setModalOpen(true);
+    } else {
+      toast.error("Quantity Field is Empty");
     }
   };
 
@@ -83,26 +86,46 @@ function SellCoinForm({
     }
   };
 
-  const handleSubmit = () => {
-    // Generate a unique transaction ID (you can use a library like uuid)
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const transactionId = generateUniqueTransactionId();
 
-    // Create a transaction object with the required information
+    const existingTransactionIndex = TransactionHistory.findIndex(
+      (transaction) => transaction.transactionId === transactionId
+    );
+
     const transaction = {
-      transactionId,
+      coinIcon: selectedCoinInfo.image,
+      transactionId: transactionId,
       coin: selectedCoin,
       coinQuantity: quantity,
       valueUsd: valueUsd,
       valueInNaira: valueInNaira,
-
       screenShot: file,
       user: "Andara Daniel",
+      userId: "",
+      dateTimeCreated: new Date(),
+      bankName: "Opay",
+      accountName: "Test Account",
+      accountNumber: "12345678",
+      transactionStatus: "Awaiting Confirmation",
     };
 
-    // Push the transaction to the transaction history
-    TransactionHistory.push(transaction);
-    console.log(transaction);
+    if (existingTransactionIndex !== -1) {
+      TransactionHistory[existingTransactionIndex] = transaction;
+    } else {
+      // If the transaction ID does not exist, add the new transaction
+      TransactionHistory.push(transaction);
+    }
 
+    // Store the updated TransactionHistory in local storage
+    localStorage.setItem(
+      "TransactionHistory",
+      JSON.stringify(TransactionHistory)
+    );
+
+    // console.log(transaction);
+    toast.success("Order Successfull!");
     closeModal();
   };
 
@@ -130,6 +153,7 @@ function SellCoinForm({
   };
   const selectedCoinInfo = BuyCoins.find((coin) => coin.name === selectedCoin);
   const valueInNaira = Math.round(valueUsd * todayRate);
+  // console.log(selectedCoinInfo?.image);
   return (
     <form className="trade-form" id="trade-form">
       <p className="walletAddress-cont">

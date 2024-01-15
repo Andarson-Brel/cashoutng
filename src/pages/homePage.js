@@ -1,8 +1,6 @@
 import React from "react";
 
-export default function Homepage({ TopNavbar }) {
-  // console.log(topNavbar);
-
+export default function Homepage({ userData, TopNavbar }) {
   return (
     <>
       <header className="home-header ">

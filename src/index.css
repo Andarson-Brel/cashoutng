@@ -9,6 +9,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+a {
+  text-decoration: none;
+}
 li {
   list-style: none;
 }
@@ -147,6 +150,7 @@ header ul li:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 .hero-heading {
   font-size: 75px;
@@ -275,7 +279,7 @@ header ul li:hover {
 }
 .step-desc {
   font-size: 0.9rem;
-  color: rgba(229, 230, 229, 0.45);
+  color: rgba(229, 230, 229, 0.5);
 }
 .rate-title {
   text-align: center;
@@ -375,7 +379,8 @@ header ul li:hover {
 .dashboard-page-title,
 .step-desc,
 .selected-wallet {
-  color: #8f9090;
+  color: #343434;
+  font-size: 1.2rem;
 }
 .selected-wallet {
   font-weight: bold;
@@ -427,7 +432,7 @@ header ul li:hover {
   margin-left: 0.2rem;
 }
 .coin-wallet {
-  font-size: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .notif-icon-cont {
@@ -435,6 +440,7 @@ header ul li:hover {
   height: 40px;
   border-radius: 100px;
   overflow: hidden;
+  margin-right: 10px;
 }
 .notif-icon-cont .notif-icon {
   width: 100%;
@@ -582,6 +588,7 @@ option .total-desc,
 }
 .walletAddres {
   font-weight: bold;
+  color: white;
 }
 .wallet-cont {
   display: flex;
@@ -639,8 +646,21 @@ option .total-desc,
   display: flex;
   justify-content: space-between;
 }
+.details-cont {
+  margin: 1rem 0;
+}
 .details-cont div {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+.walletAddressInput {
+  color: white;
+}
+.transactio-value {
+  color: #cccccc !important;
+  font-weight: bold;
+}
+.pending-style {
+  color: #ffa50d;
 }
 .user-transaction-status {
   /* font-size: 1.5rem; */
@@ -658,9 +678,29 @@ option .total-desc,
   align-items: center;
   width: 100%;
 }
+.user-transaction-status,
+.admin-transaction-status {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
 .approve-style {
   color: #26ce92;
 }
 .decline-style {
   color: #ea2d2d;
+}
+.notification-list-cont {
+  border-bottom: 0.2px solid #e5e6e5;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0;
+  cursor: pointer;
+}
+/* .coin-details-cont */
+.sign-up,
+.login-bt {
+  cursor: pointer;
+}
+.coin-price {
+  font-weight: bold;
+  color: #8f9090;
 }

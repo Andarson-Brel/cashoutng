@@ -1,13 +1,20 @@
 import { useState } from "react";
 import SideNavbar from "../components/sideNavbar";
+import { useParams } from "react-router-dom";
 
-function TransactionDetail() {
+function TransactionDetail({ transactionHistory }) {
+  const { id } = useParams();
+  const transaction = transactionHistory.find(
+    (transaction) => transaction.transactionId === id
+  );
   const [adminTransactionStatus, setAdminTransactionStatus] = useState({
     Declined: false,
     Approved: false,
   });
-
-  const [userTransactionStatus, setUserTransactionStatus] = useState("pending");
+  console.log(id);
+  const [userTransactionStatus, setUserTransactionStatus] = useState(
+    transaction?.transactionStatus
+  );
 
   const handleAdminTransactionStatusChange = (status) => {
     if (!adminTransactionStatus[status]) {
@@ -15,12 +22,13 @@ function TransactionDetail() {
         ...prevStatus,
         [status]: true,
 
-        // Disable the other checkbox
         [status === "Approved" ? "Declined" : "Approved"]: true,
       }));
       setUserTransactionStatus(status);
     }
   };
+
+  console.log(transaction);
   return (
     <div>
       <div className="dashboard-cont">
@@ -32,40 +40,85 @@ function TransactionDetail() {
               <div className="details-cont">
                 <div className="">
                   <li className="details-list">
-                    <span>Coin</span> <span>btc</span>
+                    <span>Coin</span>{" "}
+                    <span className="transactio-value">{transaction.coin}</span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
-                    <span>Quantity</span> <span>btc</span>
+                    <span>Quantity</span>{" "}
+                    <span className="transactio-value">
+                      {transaction.coinQuantity}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
-                    <span>Amount (USD)</span> <span>btc</span>
+                    <span>Amount (USD)</span>{" "}
+                    <span className="transactio-value">
+                      ${transaction.valueUsd}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
-                    <span>Amount (NGR)</span> <span>btc</span>
+                    <span>Amount (NGR)</span>{" "}
+                    <span className="transactio-value">
+                      ₦{transaction.valueInNaira}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
-                    <span>Transaction Id</span> <span>btc</span>
+                    <span>Transaction Id</span>{" "}
+                    <span className="transactio-value">
+                      {transaction.transactionId}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
-                    <span>Sender</span> <span>btc</span>
+                    <span>Sender</span>{" "}
+                    <span className="transactio-value">{transaction.user}</span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
+                <div className="bank-details-container">
+                  <h5 className="bank-details-cont-head">Bank Detail</h5>
+                  <div className="">
+                    <li className="details-list">
+                      <span>Bank Name</span>{" "}
+                      <span className="transactio-value">
+                        {transaction.bankName}
+                      </span>
+                    </li>
+                    <hr className="transaction-hr" />
+                  </div>
+                  <div className="">
+                    <li className="details-list">
+                      <span>Account Number</span>{" "}
+                      <span className="transactio-value">
+                        {transaction.accountNumber}
+                      </span>
+                    </li>
+                    <hr className="transaction-hr" />
+                  </div>
+                  <div className="">
+                    <li className="details-list">
+                      <span>Name on Account</span>{" "}
+                      <span className="transactio-value">
+                        {transaction.accountName}
+                      </span>
+                    </li>
+                    <hr className="transaction-hr" />
+                  </div>
+                </div>
+
                 <div className="">
                   <li className="details-list">
                     <span>Screenshot</span> <span>btc</span>
@@ -104,7 +157,7 @@ function TransactionDetail() {
                       ? "approve-style"
                       : userTransactionStatus === "Declined"
                       ? "decline-style"
-                      : ""
+                      : "pending-style"
                   }`}
                 >
                   {userTransactionStatus}
