@@ -1,10 +1,12 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-export default function SignUpPgae({ bankNames }) {
+export default function SignUpPgae({ bankNames, bankList }) {
   const [formStep, setFormStep] = useState(0);
+  const [account, setAccount] = useState([]);
   const generateUniqueId = () => {
     return uuidv4();
   };
@@ -20,16 +22,35 @@ export default function SignUpPgae({ bankNames }) {
     accountName: "",
     userRole: "user",
     userId: generateUniqueId(),
+    bankCode: "", // Add bankCode field
   };
+
   const [formData, setFormData] = useState({
     initialState,
   });
+
   function handleChange(event) {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    if (name === "selectedBank") {
+      const selectedBank = bankList.find((bank) => bank.bank_name === value);
+
+      if (selectedBank) {
+        const bankCode = selectedBank.code;
+        // console.log(bankCode);
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+          bankCode: bankCode,
+        }));
+      }
+    } else {
+      // For other fields, update the state as usual
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   }
 
   function nextStep() {
@@ -80,7 +101,27 @@ export default function SignUpPgae({ bankNames }) {
     }
   }
 
-  // console.log(formData);
+  useEffect(() => {
+    if (formData.bankCode) {
+      axios
+        .get(
+          `https://app.nuban.com.ng/api/NUBAN-VPWTUJWJ1943?bank_code=${formData.bankCode}&acc_no=${formData.accountNumber}`
+        )
+        .then((response) => {
+          const { account_name } = response.data[0];
+          setAccount(response.data[0]);
+          setFormData((prevData) => ({
+            ...prevData,
+            accountName: account_name,
+          }));
+          // console.log(account_name);
+        })
+        .catch((error) => {
+          toast.error(error);
+        });
+    }
+  }, [formData.bankCode, formData.accountNumber]);
+
   return (
     <>
       <div className="form-container">
@@ -167,9 +208,10 @@ export default function SignUpPgae({ bankNames }) {
               <input
                 type="text"
                 name="accountName"
-                placeholder="Account Name"
+                placeholder={formData.accountName}
                 value={formData.accountName}
                 onChange={handleChange}
+                readOnly
               />
             </section>
           )}

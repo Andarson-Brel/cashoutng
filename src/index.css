@@ -279,7 +279,7 @@ header ul li:hover {
 }
 .step-desc {
   font-size: 0.9rem;
-  color: rgba(229, 230, 229, 0.45);
+  color: rgba(229, 230, 229, 0.5);
 }
 .rate-title {
   text-align: center;
@@ -379,7 +379,8 @@ header ul li:hover {
 .dashboard-page-title,
 .step-desc,
 .selected-wallet {
-  color: #8f9090;
+  color: #343434;
+  font-size: 1.2rem;
 }
 .selected-wallet {
   font-weight: bold;
@@ -587,6 +588,7 @@ option .total-desc,
 }
 .walletAddres {
   font-weight: bold;
+  color: white;
 }
 .wallet-cont {
   display: flex;
@@ -676,6 +678,11 @@ option .total-desc,
   align-items: center;
   width: 100%;
 }
+.user-transaction-status,
+.admin-transaction-status {
+  font-weight: bold;
+  font-size: 1.6rem;
+}
 .approve-style {
   color: #26ce92;
 }
@@ -689,3 +696,11 @@ option .total-desc,
   cursor: pointer;
 }
 /* .coin-details-cont */
+.sign-up,
+.login-bt {
+  cursor: pointer;
+}
+.coin-price {
+  font-weight: bold;
+  color: #8f9090;
+}

@@ -108,7 +108,7 @@ function SellCoinForm({
       bankName: "Opay",
       accountName: "Test Account",
       accountNumber: "12345678",
-      transactionStatus: "pending",
+      transactionStatus: "Awaiting Confirmation",
     };
 
     if (existingTransactionIndex !== -1) {
@@ -153,7 +153,7 @@ function SellCoinForm({
   };
   const selectedCoinInfo = BuyCoins.find((coin) => coin.name === selectedCoin);
   const valueInNaira = Math.round(valueUsd * todayRate);
-  console.log(selectedCoinInfo?.image);
+  // console.log(selectedCoinInfo?.image);
   return (
     <form className="trade-form" id="trade-form">
       <p className="walletAddress-cont">

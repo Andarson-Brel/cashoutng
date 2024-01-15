@@ -11,7 +11,12 @@ import TransactionContainer from "../components/TransactionContainer";
 import TradeContainer from "../components/TradeContainer";
 import AddCoin from "../components/AddCoin";
 import Button from "../components/button";
-export default function DashBoard({ coins, coinNames, transactionHistory }) {
+export default function DashBoard({
+  coins,
+  coinNames,
+  transactionHistory,
+  user,
+}) {
   const coinsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,21 +89,23 @@ export default function DashBoard({ coins, coinNames, transactionHistory }) {
             </div>
           </DashboardContainer>
 
-          <DashboardContainer width={"50%"}>
-            <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
+          {user && user.role === "admin" ? (
+            <DashboardContainer width={"50%"}>
+              <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
 
-            <AddCoin coinList={coinNames} coins={coins} />
-            {BuyCoins.map((coin, i) => (
-              <CoinList
-                coinSn={i + 1}
-                coinName={coin.name}
-                walletAddress={coin.walletAddress}
-                coinThmb={coin.image}
-                coinSymbol={coin.symbol}
-                key={i}
-              />
-            ))}
-          </DashboardContainer>
+              <AddCoin coinList={coinNames} coins={coins} />
+              {BuyCoins.map((coin, i) => (
+                <CoinList
+                  coinSn={i + 1}
+                  coinName={coin.name}
+                  walletAddress={coin.walletAddress}
+                  coinThmb={coin.image}
+                  coinSymbol={coin.symbol}
+                  key={i}
+                />
+              ))}
+            </DashboardContainer>
+          ) : null}
         </div>
         <div className="dashboard-column">
           <TradeContainer

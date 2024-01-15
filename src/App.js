@@ -18,6 +18,7 @@ function App() {
   const [bankList, setBankList] = useState([]);
   const [userData, setUserData] = useState([]);
   const [transactionHistory, setTransactionHistory] = useState([]);
+
   useEffect(() => {
     const storedTransaction = localStorage.getItem("TransactionHistory");
 
@@ -37,7 +38,7 @@ function App() {
   }, []);
   useEffect(() => {
     axios
-      .get("https://nubapi.com/bank-json")
+      .get("https://app.nuban.com.ng/bank_codes.json")
       .then((response) => {
         setBankList(response.data);
       })
@@ -59,12 +60,13 @@ function App() {
       });
   }, []);
   const bankNames = bankList.map((bank) => {
-    return bank.name;
+    return bank.bank_name;
   });
   const coinNames = coins.map((coin) => {
     return coin.name;
   });
   bankNames.push("Opay");
+  // console.log(bankList.map((bank) => bank.bank_name));
   // console.log(coinNames);
   // console.log(userData);
   return (
@@ -75,7 +77,10 @@ function App() {
           path="/"
           element={<Homepage TopNavbar={TopNavbar} userData={userData} />}
         />
-        <Route path="Sign-up" element={<SignUpPgae bankNames={bankNames} />} />
+        <Route
+          path="Sign-up"
+          element={<SignUpPgae bankNames={bankNames} bankList={bankList} />}
+        />
         <Route
           path="Dashboard"
           element={
@@ -95,7 +100,7 @@ function App() {
           path="Trade"
           element={<Trade coins={coins} coinNames={coinNames} />}
         />
-        <Route path="customers" element={<Customers />} />
+        <Route path="customers" element={<Customers userData={userData} />} />
         <Route
           path="transaction/:id"
           element={
