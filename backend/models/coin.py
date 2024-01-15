@@ -4,10 +4,10 @@ Define the User class for the 'users' table in the database.
 """
 
 from models.base_model import BaseModel
-from models import db
+from models import storage
 
 
-class Coin(BaseModel, db.Model):
+class Coin(BaseModel, storage.Model):
     """
     Table name in the database
 
@@ -19,6 +19,6 @@ class Coin(BaseModel, db.Model):
     """
 
     __tablename__ = "coin"
-    name = db.Column(db.String(128), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    name = storage.Column(storage.String(128), nullable=False, unique=True)
+    description = storage.Column(storage.Text, nullable=False)
+    price = storage.Column(storage.Float, nullable=False)

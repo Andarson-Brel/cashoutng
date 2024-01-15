@@ -4,10 +4,10 @@ Define the Transaction class for the 'transactions' table in the database.
 """
 
 from models.base_model import BaseModel
-from models import db
+from models import storage
 
 
-class Transaction(BaseModel, db.Model):
+class Transaction(BaseModel, storage.Model):
     """
     Table name in the database
 
@@ -20,9 +20,12 @@ class Transaction(BaseModel, db.Model):
     """
 
     __tablename__ = "transaction"
-    status = db.Column(db.String(128), default="pending", nullable=False)
-    quanitiy = db.Column(db.Integer, nullable=False)
-    amount_usd = db.Column(db.Float, nullable=False)
-    amount_ngn = db.Column(db.Float, nullable=False)
+    status = storage.Column(storage.String(128), default="pending", nullable=False)
+    quantity = storage.Column(storage.Integer, nullable=False)
+    amount_usd = storage.Column(storage.Float, nullable=True)
+    amount_ngn = storage.Column(storage.Float, nullable=True)
 
-    coin = db.Column(db.String(128), nullable=False)
+    user_id = storage.Column(
+        storage.String(128), storage.ForeignKey("user.id"), nullable=True
+    )
+    user = storage.relationship("User", backref="transactions")

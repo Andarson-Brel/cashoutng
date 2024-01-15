@@ -4,10 +4,10 @@ Define the User class for the 'users' table in the database.
 """
 
 from models.base_model import BaseModel
-from models import db
+from models import storage
 
 
-class User(BaseModel, db.Model):
+class User(BaseModel, storage.Model):
     """
     Table name in the database
 
@@ -26,16 +26,15 @@ class User(BaseModel, db.Model):
     """
 
     __tablename__ = "user"
-    first_name = db.Column(db.String(128), nullable=False)
-    last_name = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(128), nullable=False, unique=True)
-    first_name = db.Column(db.String(128), nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
-    is_admin = db.Column(db.String(128), nullable=False, default=False)
-    username = db.Column(db.String(128), nullable=False)
-    bank = db.Column(db.String(128), nullable=False)
-    account_name = db.Column(db.String(128), nullable=False)
-    account_number = db.Column(db.String(128), nullable=False)
+    first_name = storage.Column(storage.String(128), nullable=True)
+    last_name = storage.Column(storage.String(128), nullable=True)
+    email = storage.Column(storage.String(128), nullable=True, unique=True)
+    password_hash = storage.Column(storage.String(128), nullable=True)
+    is_admin = storage.Column(storage.String(128), nullable=True, default=True)
+    username = storage.Column(storage.String(128), nullable=True)
+    bank = storage.Column(storage.String(128), nullable=True)
+    account_name = storage.Column(storage.String(128), nullable=True)
+    account_number = storage.Column(storage.String(128), nullable=True)
 
     def is_active(self):
         # Define your own logic for determining if the user is active or not
