@@ -10,6 +10,7 @@ from models import app, storage
 import os
 
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
+app.config["UPLOAD_FOLDER"] = "images"
 app.register_blueprint(app_views)
 
 with app.app_context():

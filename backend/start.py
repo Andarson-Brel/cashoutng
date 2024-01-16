@@ -28,3 +28,25 @@
 #     print(storage.all(User))
 #     storage.delete(coin)
 #     storage.save()
+import base64
+from PIL import Image
+from io import BytesIO
+
+
+def get_coded_image(image):
+    with open(image, "rb") as im:
+        nnn = im.read()
+        enco = base64.b64encode(nnn)
+        # ba = base64.b64decode(enco).decode("utf-8")
+        # images = Image.open(BytesIO(nnn))
+        # resised = images.tobytes()
+        print(nnn)
+        # print(images.getdata())
+
+        # return nnn
+
+    with open("recieved.png", "wb") as q:
+        nnnn = q.write(nnn)
+
+
+print(get_coded_image("./models/img.png"))

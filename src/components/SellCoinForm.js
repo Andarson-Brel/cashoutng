@@ -37,6 +37,14 @@ function SellCoinForm({
   const handleFileChange = (event) => {
     const uploadedFile = event.target.files[0];
     setFile(uploadedFile);
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+
+    // const reader = new FileReader();
+    // reader.onload = (e) => {
+    //   const fileData = e.target.result;
+    // };
+    // reader.result(uploadedFile);
   };
   const handleQuickTradeButtonClick = (buttonText, e) => {
     e.preventDefault();

@@ -14,11 +14,16 @@ class Coin(BaseModel, storage.Model):
     Attributes:
         __tablename__ (str): The name of the database table.
         name (str): The name of the coin
-        description (str): a brief description of the coin
+        logo (str): The logo of the coin
         price (float): The current price of the coin
+        abv (str): abbreviation of the coin name
+        walletAddress (str): The address of the crypto wallet for coin payments
     """
 
     __tablename__ = "coin"
-    name = storage.Column(storage.String(128), nullable=False, unique=True)
-    description = storage.Column(storage.Text, nullable=False)
+    name = storage.Column(storage.String(128), nullable=False)
+    logo = storage.Column(storage.String(128), nullable=False)
+    abv = storage.Column(storage.String(20), nullable=False)
     price = storage.Column(storage.Float, nullable=False)
+    walletAddress = storage.Column(storage.String(128), nullable=False)
+    unitPrice = storage.Column(storage.Float, nullable=False)
