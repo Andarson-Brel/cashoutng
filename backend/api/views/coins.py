@@ -7,6 +7,7 @@ from flask import abort, jsonify, make_response, request
 from models.coin import Coin
 from uuid import uuid4
 from models import storage
+import requests
 
 
 @app_views.route("/coins", methods=["GET"], strict_slashes=True)
@@ -74,3 +75,14 @@ def put_coin(coin_id):
         setattr(coin, key, val)
     storage.save()
     return make_response(jsonify({}), 200)
+
+
+@app_views.route("/fullcoins", methods=["GET"])
+def full_coins():
+    response = requests.get(
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=Usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    return make_response(response, 200)

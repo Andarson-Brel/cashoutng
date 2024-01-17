@@ -26,15 +26,15 @@ class User(BaseModel, storage.Model):
     """
 
     __tablename__ = "user"
-    first_name = storage.Column(storage.String(128), nullable=False)
-    last_name = storage.Column(storage.String(128), nullable=False)
+    firstName = storage.Column(storage.String(128), nullable=False)
+    lastName = storage.Column(storage.String(128), nullable=False)
     email = storage.Column(storage.String(128), nullable=False, unique=False)
-    password_hash = storage.Column(storage.String(128), nullable=False)
-    is_admin = storage.Column(storage.String(128), nullable=False, default=False)
+    password = storage.Column(storage.String(128), nullable=False)
+    isAdmin = storage.Column(storage.Boolean(128), nullable=False, default=False)
     username = storage.Column(storage.String(128), nullable=False)
     bank = storage.Column(storage.String(128), nullable=False)
-    account_name = storage.Column(storage.String(128), nullable=False)
-    account_number = storage.Column(storage.String(128), nullable=False)
+    accountName = storage.Column(storage.String(128), nullable=False)
+    accountNumber = storage.Column(storage.String(128), nullable=False)
 
     def is_active(self):
         # Define your own logic for determining if the user is active or not
