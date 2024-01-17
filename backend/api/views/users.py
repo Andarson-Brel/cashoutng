@@ -45,7 +45,6 @@ def delete_user(user_id):
 @swag_from("documentation/user/post_user.yml", methods=["POST"])
 def post_user():
     """create a new user"""
-    print(request.form.to_dict())
     if not request.form.to_dict():
         abort(404, description="Not a valid json")
 
@@ -54,6 +53,8 @@ def post_user():
         abort(400, description="Missing email")
     if "password_hash" not in req:
         abort(400, description="Missing password")
+    if "first_name" not in req:
+        abort(400, description="Missing first_name")
 
     instance = User(**req)
     instance.id = str(uuid4())

@@ -56,3 +56,20 @@ def post_transaction():
     storage.new(instance)
     storage.save()
     return make_response(jsonify(instance.to_dict()), 201)
+
+@app_views.route("/transaction/<transaction_id>", methods=["PUT"], strict_slashes=True)
+@swag_from("documentation/transaction/put_transaction.yml", methods=["PUT"])
+def put_transaction(transaction_id):
+    """Update transaction information for the given transaction"""
+    transaction = storage.get(Transaction, transaction_id)
+    if not transaction:
+        abort(404)
+
+    if not request.form.to_dict():
+        abort(404, description="Invalid JSON")
+
+    data = request.form.to_dict()
+    for key, val in data.items():
+        setattr(transaction, key, val)
+    storage.save()
+    return make_response(jsonify({}), 200)

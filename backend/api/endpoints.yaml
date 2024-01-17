@@ -1,0 +1,21 @@
+user endpoints
+GET /api/users: returns a list of all registered users
+GET /api/user/<user_id>: retrurn a user with the matching id
+DELETE /api/user/<user_id>: delete a user with the matching id
+POST /api/user: add a new user to the database
+PUT /api/user/<user_id>: edit a user with the matching id
+
+transaction endpoints
+GET /api/transactions: returns a list of all  transactions
+GET /api/transaction/<user_id>: retrurn a transaction with the matching id
+DELETE /api/transaction/<user_id>: delete a transaction with the matching id
+POST /api/transaction: add a new transaction to the database
+PUT /api/transaction/<user_id>: edit a transaction with the matching id
+GET /<user_id>/transactions: get a list of transactions from the user with the matching id
+
+coin endpoints
+GET /api/coins: returns a list of all approved coins
+GET /api/coin/<user_id>: retrurn a coin with the matching id
+DELETE /api/coin/<user_id>: delete a coin with the matching id
+POST /api/coin: add a new coin to the database
+PUT /api/coin/<user_id>: edit a coin with the matching id
