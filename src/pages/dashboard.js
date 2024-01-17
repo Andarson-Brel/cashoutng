@@ -11,6 +11,7 @@ import TransactionContainer from "../components/TransactionContainer";
 import TradeContainer from "../components/TradeContainer";
 import AddCoin from "../components/AddCoin";
 import Button from "../components/button";
+import axios from "axios";
 export default function DashBoard({
   coins,
   coinNames,
@@ -28,7 +29,9 @@ export default function DashBoard({
     );
     setFilteredCoins(filtered);
   }, [coins, searchQuery]);
-
+  fetch("http://localhost:5000/api/coins")
+    .then((response) => response.json())
+    .then((responseData) => console.log(responseData));
   const startIndex = (currentPage - 1) * coinsPerPage;
   const endIndex = startIndex + coinsPerPage;
 
