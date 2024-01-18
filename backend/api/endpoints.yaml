@@ -1,0 +1,62 @@
+user endpoints
+GET /api/users: returns a list of all registered users
+GET /api/user/<user_id>: retrurn a user with the matching id
+DELETE /api/user/<user_id>: delete a user with the matching id
+POST /api/user: add a new user to the database
+    data_schema: {
+      firstName: string REQUIRED,
+      lastName: string REQUIRED,
+      email: string REQUIRED,
+      password: string REQUIRED,
+      isAdmin: boolean (default false) OPTIONAL,
+      username: string REQUIRED,
+      bank: string REQUIRED,
+      accountName: string REQUIRED,
+      accountNumber: string REQUIRED, 
+    }
+PUT /api/user/<user_id>: edit a user with the matching id
+
+transaction endpoints
+GET /api/transactions: returns a list of all transactions
+GET /api/transaction/<transaction_id>: retrurn a transaction object with the matching id
+DELETE /api/transaction/<transaction_id>: delete a transaction with the matching id in the database
+POST /api/transaction: add a new transaction to the database 
+      data_schema: {
+        # status: string ('success' || 'failure' || 'pending')
+        quantity: integer REQUIRED,
+        valueUsd: float REQUIRED,
+        valueInNaira: float REQUIRED,
+        userName: string REQUIRED,
+        coinName: string REQUIRED,
+        userId: string REQUIRED,
+        imgUrl: string OPTIONAL,
+      }
+
+PUT /api/transaction/<user_id>: edit a transaction with the matching id
+      data_schema: {status: string ('success' || 'failure)}
+GET /<user_id>/transactions: get a list of transactions from the user with the matching id
+
+coin endpoints
+GET /api/coins: returns a list of all approved coins
+GET /api/coin/<coin_id>: retrurn a coin with the matching id
+GET /api/fullcoins: returns a list of coins from a third party api
+DELETE /api/coin/<coin_id>: delete a coin with the matching id
+POST /api/coin: add a new coin to the database
+    data_schema: {
+      name: string REQUIRED,
+      logo: string REQUIRED,
+      abv: string REQUIRED,
+      unitPrice: float REQUIRED,
+      walletAddress: string REQUIRED,
+    }
+
+PUT /api/coin/<coin_id>: edit a coin with the matching id
+
+
+exchange rate
+GET /api/exchange_rate: returns an object with the most recent exchange rate from the db
+POST /api/exchange_rate: adds an exchange rate to the database
+    data_schema: {
+      rate: float REQUIRED
+    }
+PUT /api/exchange_rate/<exchange_rate_id>: edit the rate an exchange rate with the matching is to the database

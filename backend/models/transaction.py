@@ -3,9 +3,8 @@
 Define the Transaction class for the 'transactions' table in the database.
 """
 
-from models.base_model import BaseModel
 from models import storage
-
+from models.base_model import BaseModel
 from models.coin import Coin
 
 
@@ -26,16 +25,16 @@ class Transaction(BaseModel, storage.Model):
     __tablename__ = "transaction"
     status = storage.Column(storage.String(128), default="pending", nullable=False)
     quantity = storage.Column(storage.Integer, nullable=False)
-    valueUsd = storage.Column(storage.Float, nullable=True)
-    valueInNaira = storage.Column(storage.Float, nullable=True)
+    valueUsd = storage.Column(storage.Float, nullable=False)
+    valueInNaira = storage.Column(storage.Float, nullable=False)
     userName = storage.Column(storage.String(128), nullable=False)
     coinName = storage.Column(storage.String(60), nullable=False)
     userId = storage.Column(
         storage.String(128), storage.ForeignKey("user.id"), nullable=False
     )
-    coinId = storage.Column(
-        storage.String(128), storage.ForeignKey("coin.id"), nullable=False
-    )
-    img = storage.Column(storage.String(255), nullable=False)
-    coin = storage.relationship("Coin", backref="transactions")
+    # coinId = storage.Column(
+    #     storage.String(128), storage.ForeignKey("coin.id"), nullable=False
+    # )
+    imgUrl = storage.Column(storage.String(255), nullable=True)
+    # coin = storage.relationship("Coin", backref="transactions")
     user = storage.relationship("User", backref="transactions")

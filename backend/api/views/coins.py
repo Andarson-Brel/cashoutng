@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 """ objects that handles all default RestFul API actions for coin"""
 
+from uuid import uuid4
+
+import requests
 from api.views import app_views
 from flasgger import swag_from
 from flask import abort, jsonify, make_response, request
-from models.coin import Coin
-from uuid import uuid4
+from helpers.object import check_keys, validate_object
 from models import storage
+from models.coin import Coin
 
 
 @app_views.route("/coins", methods=["GET"], strict_slashes=True)
@@ -49,7 +52,8 @@ def post_coin():
         abort(404, description="Not a valid json")
 
     req = request.form.to_dict()
-
+    req = check_keys(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+    validate_object(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
     instance = Coin(**req)
     instance.id = str(uuid4())
 
@@ -70,7 +74,20 @@ def put_coin(coin_id):
         abort(404, description="Invalid JSON")
 
     data = request.form.to_dict()
+    data = check_keys(data, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+
     for key, val in data.items():
         setattr(coin, key, val)
     storage.save()
     return make_response(jsonify({}), 200)
+
+
+@app_views.route("/fullcoins", methods=["GET"])
+def full_coins():
+    response = requests.get(
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=Usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    return make_response(response, 200)
