@@ -8,7 +8,7 @@ POST /api/user: add a new user to the database
       lastName: string REQUIRED,
       email: string REQUIRED,
       password: string REQUIRED,
-      isAdmin: boolean (default false) REQUIRED,
+      isAdmin: boolean (default false) OPTIONAL,
       username: string REQUIRED,
       bank: string REQUIRED,
       accountName: string REQUIRED,
@@ -38,9 +38,9 @@ GET /<user_id>/transactions: get a list of transactions from the user with the m
 
 coin endpoints
 GET /api/coins: returns a list of all approved coins
-GET /api/coin/<user_id>: retrurn a coin with the matching id
+GET /api/coin/<coin_id>: retrurn a coin with the matching id
 GET /api/fullcoins: returns a list of coins from a third party api
-DELETE /api/coin/<user_id>: delete a coin with the matching id
+DELETE /api/coin/<coin_id>: delete a coin with the matching id
 POST /api/coin: add a new coin to the database
     data_schema: {
       name: string REQUIRED,
@@ -50,4 +50,13 @@ POST /api/coin: add a new coin to the database
       walletAddress: string REQUIRED,
     }
 
-PUT /api/coin/<user_id>: edit a coin with the matching id
+PUT /api/coin/<coin_id>: edit a coin with the matching id
+
+
+exchange rate
+GET /api/exchange_rate: returns an object with the most recent exchange rate from the db
+POST /api/exchange_rate: adds an exchange rate to the database
+    data_schema: {
+      rate: float REQUIRED
+    }
+PUT /api/exchange_rate/<exchange_rate_id>: edit the rate an exchange rate with the matching is to the database
