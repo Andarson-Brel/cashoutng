@@ -27,14 +27,12 @@ class Transaction(BaseModel, storage.Model):
     quantity = storage.Column(storage.Integer, nullable=False)
     valueUsd = storage.Column(storage.Float, nullable=False)
     valueInNaira = storage.Column(storage.Float, nullable=False)
-    userName = storage.Column(storage.String(128), nullable=False)
-    coinName = storage.Column(storage.String(60), nullable=False)
     userId = storage.Column(
         storage.String(128), storage.ForeignKey("user.id"), nullable=False
     )
-    # coinId = storage.Column(
-    #     storage.String(128), storage.ForeignKey("coin.id"), nullable=False
-    # )
+    coinId = storage.Column(
+        storage.String(128), storage.ForeignKey("coin.id"), nullable=False
+    )
     imgUrl = storage.Column(storage.String(255), nullable=True)
-    # coin = storage.relationship("Coin", backref="transactions")
+    coin = storage.relationship("Coin", backref="transactions")
     user = storage.relationship("User", backref="transactions")
