@@ -29,7 +29,7 @@ POST /api/transaction: add a new transaction to the database
         userName: string REQUIRED,
         coinName: string REQUIRED,
         userId: string REQUIRED,
-        imgUrl: string REQUIRED,
+        imgUrl: string OPTIONAL,
       }
 
 PUT /api/transaction/<user_id>: edit a transaction with the matching id

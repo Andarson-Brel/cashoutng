@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 """ objects that handles all default RestFul API actions for User"""
 
+from uuid import uuid4
+
 from api.views import app_views
 from flasgger import swag_from
 from flask import abort, jsonify, make_response, request
-from models.user import User
-from uuid import uuid4
+from helpers.object import check_keys, validate_object
 from models import storage
+from models.user import User
 
 
 @app_views.route("/users", methods=["GET"], strict_slashes=True)
@@ -49,13 +51,34 @@ def post_user():
         abort(404, description="Not a valid json")
 
     req = request.form.to_dict()
-    if "email" not in req:
-        abort(400, description="Missing email")
-    if "password_hash" not in req:
-        abort(400, description="Missing password")
-    if "first_name" not in req:
-        abort(400, description="Missing first_name")
-
+    req = check_keys(
+        req,
+        [
+            "email",
+            "password",
+            "firstName",
+            "lastName",
+            "username",
+            "bank",
+            "accountName",
+            "accountNumber",
+        ],
+    )
+    validate_object(
+        req,
+        [
+            "email",
+            "password",
+            "firstName",
+            "lastName",
+            "username",
+            "bank",
+            "accountName",
+            "accountNumber",
+        ],
+    )
+    if "isAdmin" in req:
+        req["isAdmin"] = bool(int(req["isAdmin"]))
     instance = User(**req)
     instance.id = str(uuid4())
     storage.new(instance)
@@ -75,6 +98,22 @@ def put_user(user_id):
         abort(404, description="Invalid JSON")
 
     data = request.form.to_dict()
+    data = check_keys(
+        data,
+        [
+            "email",
+            "password",
+            "firstName",
+            "lastName",
+            "username",
+            "bank",
+            "accountName",
+            "accountNumber",
+            "isAdmin",
+        ],
+    )
+    if "isAdmin" in data:
+        data["isAdmin"] = bool(int(data["isAdmin"]))
     for key, val in data.items():
         setattr(user, key, val)
     storage.save()

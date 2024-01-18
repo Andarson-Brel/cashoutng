@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 """ objects that handles all default RestFul API actions for Transaction"""
 
+from uuid import uuid4
+
 from api.views import app_views
 from flasgger import swag_from
 from flask import abort, jsonify, make_response, request
+from helpers.object import check_keys, validate_object
+from models import storage
 from models.transaction import Transaction
 from models.user import User
-from models import storage
-from uuid import uuid4
 
 
 @app_views.route("/transactions", methods=["GET"], strict_slashes=True)
@@ -51,11 +53,36 @@ def post_transaction():
         abort(404, description="Not a valid json")
 
     req = request.form.to_dict()
+    req = check_keys(
+        req,
+        [
+            "status",
+            "quantity",
+            "valueUsd",
+            "valueInNaira",
+            "userName",
+            "coinName",
+            "userId",
+            "imgUrl",
+        ],
+    )
+    validate_object(
+        req,
+        [
+            "quantity",
+            "valueUsd",
+            "valueInNaira",
+            "userName",
+            "coinName",
+            "userId",
+        ],
+    )
     instance = Transaction(**req)
     instance.id = str(uuid4())
     storage.new(instance)
     storage.save()
     return make_response(jsonify(instance.to_dict()), 201)
+
 
 @app_views.route("/transaction/<transaction_id>", methods=["PUT"], strict_slashes=True)
 @swag_from("documentation/transaction/put_transaction.yml", methods=["PUT"])
@@ -69,6 +96,19 @@ def put_transaction(transaction_id):
         abort(404, description="Invalid JSON")
 
     data = request.form.to_dict()
+    data = check_keys(
+        data,
+        [
+            "status",
+            "quantity",
+            "valueUsd",
+            "valueInNaira",
+            "userName",
+            "coinName",
+            "userId",
+            "imgUrl",
+        ],
+    )
     for key, val in data.items():
         setattr(transaction, key, val)
     storage.save()

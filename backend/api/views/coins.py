@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 """ objects that handles all default RestFul API actions for coin"""
 
+from uuid import uuid4
+
+import requests
 from api.views import app_views
 from flasgger import swag_from
 from flask import abort, jsonify, make_response, request
-from models.coin import Coin
-from uuid import uuid4
+from helpers.object import check_keys, validate_object
 from models import storage
-import requests
+from models.coin import Coin
 
 
 @app_views.route("/coins", methods=["GET"], strict_slashes=True)
@@ -50,7 +52,8 @@ def post_coin():
         abort(404, description="Not a valid json")
 
     req = request.form.to_dict()
-
+    req = check_keys(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+    validate_object(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
     instance = Coin(**req)
     instance.id = str(uuid4())
 
@@ -71,6 +74,8 @@ def put_coin(coin_id):
         abort(404, description="Invalid JSON")
 
     data = request.form.to_dict()
+    data = check_keys(data, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+
     for key, val in data.items():
         setattr(coin, key, val)
     storage.save()

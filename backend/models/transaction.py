@@ -35,6 +35,6 @@ class Transaction(BaseModel, storage.Model):
     # coinId = storage.Column(
     #     storage.String(128), storage.ForeignKey("coin.id"), nullable=False
     # )
-    imgUrl = storage.Column(storage.String(255), nullable=False)
+    imgUrl = storage.Column(storage.String(255), nullable=True)
     # coin = storage.relationship("Coin", backref="transactions")
     user = storage.relationship("User", backref="transactions")
