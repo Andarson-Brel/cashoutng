@@ -18,9 +18,13 @@ def get_transactions():
     """retreves a list containing all transactions in the database"""
     all_transactions = storage.all(Transaction)
 
-    return make_response(
-        jsonify([transaction.to_dict() for transaction in all_transactions], 200)
-    )
+    all_t = []
+    for tran in all_transactions:
+        transaction = tran.to_dict()
+        transaction["user"] = tran.user.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
+        all_t.append(transaction)
+    return make_response(jsonify(all_t, 200))
 
 
 @app_views.route("/<user_id>/transactions", methods=["GET"], strict_slashes=True)
@@ -28,15 +32,18 @@ def get_transactions():
 def get_all_users_transactions(user_id):
     """retreves a list containing all transactions in the database"""
     user = storage.get(User, user_id)
+    if not user:
+        abort(404)
     all_transactions = user.transactions
-    print(all_transactions[0].to_dict())
     all_t = []
     for tran in all_transactions:
         transaction = tran.to_dict()
         transaction["user"] = tran.user.to_dict()
         transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
-    return make_response(all_t, 200)
+
+    print(all_t)
+    return make_response({}, 200)
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["GET"], strict_slashes=True)
