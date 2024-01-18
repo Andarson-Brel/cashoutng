@@ -17,9 +17,14 @@ from models.user import User
 def get_transactions():
     """retreves a list containing all transactions in the database"""
     all_transactions = storage.all(Transaction)
-    return make_response(
-        jsonify([transaction.to_dict() for transaction in all_transactions], 200)
-    )
+
+    all_t = []
+    for tran in all_transactions:
+        transaction = tran.to_dict()
+        transaction["user"] = tran.user.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
+        all_t.append(transaction)
+    return make_response(jsonify(all_t, 200))
 
 
 @app_views.route("/<user_id>/transactions", methods=["GET"], strict_slashes=True)
@@ -27,11 +32,18 @@ def get_transactions():
 def get_all_users_transactions(user_id):
     """retreves a list containing all transactions in the database"""
     user = storage.get(User, user_id)
+    if not user:
+        abort(404)
     all_transactions = user.transactions
+    all_t = []
+    for tran in all_transactions:
+        transaction = tran.to_dict()
+        transaction["user"] = tran.user.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
+        all_t.append(transaction)
 
-    return make_response(
-        jsonify([transaction.to_dict() for transaction in all_transactions], 200)
-    )
+    print(all_t)
+    return make_response({}, 200)
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["GET"], strict_slashes=True)
@@ -40,7 +52,10 @@ def get_one_transaction(transaction_id):
     """Returns a single transaction object for the database"""
     transaction = storage.get(Transaction, transaction_id)
     if transaction:
-        return jsonify(transaction.to_dict(), 200)
+        tran: dict = transaction.to_dict()
+        tran["user"] = transaction.user.to_dict()
+        tran["coin"] = transaction.coin.to_dict()
+        return jsonify(tran, 200)
 
     return abort(404)
 
@@ -60,22 +75,14 @@ def post_transaction():
             "quantity",
             "valueUsd",
             "valueInNaira",
-            "userName",
-            "coinName",
             "userId",
+            "coinId",
             "imgUrl",
         ],
     )
     validate_object(
         req,
-        [
-            "quantity",
-            "valueUsd",
-            "valueInNaira",
-            "userName",
-            "coinName",
-            "userId",
-        ],
+        ["quantity", "valueUsd", "valueInNaira", "userId", "coinId"],
     )
     instance = Transaction(**req)
     instance.id = str(uuid4())

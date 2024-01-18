@@ -26,9 +26,8 @@ POST /api/transaction: add a new transaction to the database
         quantity: integer REQUIRED,
         valueUsd: float REQUIRED,
         valueInNaira: float REQUIRED,
-        userName: string REQUIRED,
-        coinName: string REQUIRED,
         userId: string REQUIRED,
+        coinId: string REQUIRED,
         imgUrl: string OPTIONAL,
       }
 
