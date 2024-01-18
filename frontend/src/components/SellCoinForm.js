@@ -103,13 +103,14 @@ function SellCoinForm({
     const transaction = {
       // coinIcon: selectedCoinInfo.image,
       // transactionId: transactionId,
-      coinName: selectedCoin,
+      // coinName: selectedCoin,
       quantity: quantity,
       valueUsd: valueUsd,
       valueInNaira: valueInNaira,
-      imgUrl: file,
-      userName: "Andara Daniel",
+      // imgUrl: file,
+      // userName: "Andara Daniel",
       userId: transactionId,
+      coinId: transactionId,
       // dateTimeCreated: new Date(),
       // bankName: "Opay",
       // accountName: "Test Account",
@@ -139,6 +140,7 @@ function SellCoinForm({
       })
       .catch((error) => {
         // Handle errors during the fetch
+        console.log(error.message);
         console.error("Error submitting transaction:", error);
         toast.error("Error submitting transaction. Please try again.");
       });

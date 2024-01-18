@@ -21,10 +21,10 @@ def get_transactions():
     all_t = []
     for tran in all_transactions:
         transaction = tran.to_dict()
-        transaction["user"] = tran.user.to_dict()
-        transaction["coin"] = tran.coin.to_dict()
+        # transaction["user"] = tran.user.to_dict()
+        # transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
-    return make_response(jsonify(all_t, 200))
+    return jsonify(all_t, 200)
 
 
 @app_views.route("/<user_id>/transactions", methods=["GET"], strict_slashes=True)
@@ -38,8 +38,8 @@ def get_all_users_transactions(user_id):
     all_t = []
     for tran in all_transactions:
         transaction = tran.to_dict()
-        transaction["user"] = tran.user.to_dict()
-        transaction["coin"] = tran.coin.to_dict()
+        # transaction["user"] = tran.user.to_dict()
+        # transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
 
     print(all_t)
@@ -53,8 +53,8 @@ def get_one_transaction(transaction_id):
     transaction = storage.get(Transaction, transaction_id)
     if transaction:
         tran: dict = transaction.to_dict()
-        tran["user"] = transaction.user.to_dict()
-        tran["coin"] = transaction.coin.to_dict()
+        # tran["user"] = transaction.user.to_dict()
+        # tran["coin"] = transaction.coin.to_dict()
         return jsonify(tran, 200)
 
     return abort(404)
@@ -64,10 +64,11 @@ def get_one_transaction(transaction_id):
 @swag_from("documentation/transaction/post_transaction.yml", methods=["POST"])
 def post_transaction():
     """create a new transaction"""
-    if not request.form.to_dict():
+
+    if not request.get_json():
         abort(404, description="Not a valid json")
 
-    req = request.form.to_dict()
+    req = request.get_json()
     req = check_keys(
         req,
         [
@@ -88,7 +89,7 @@ def post_transaction():
     instance.id = str(uuid4())
     storage.new(instance)
     storage.save()
-    return make_response(jsonify(instance.to_dict()), 201)
+    return jsonify(instance.to_dict()), 201
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["PUT"], strict_slashes=True)
@@ -99,10 +100,10 @@ def put_transaction(transaction_id):
     if not transaction:
         abort(404)
 
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Invalid JSON")
 
-    data = request.form.to_dict()
+    data = request.get_json()
     data = check_keys(
         data,
         [
@@ -119,4 +120,4 @@ def put_transaction(transaction_id):
     for key, val in data.items():
         setattr(transaction, key, val)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200

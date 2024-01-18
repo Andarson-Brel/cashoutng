@@ -16,7 +16,7 @@ from models.user import User
 def get_users():
     """retreves a list containing all users in the database"""
     all_users = storage.all(User)
-    return make_response(jsonify([user.to_dict() for user in all_users], 200))
+    return jsonify([user.to_dict() for user in all_users], 200)
 
 
 @app_views.route("/user/<user_id>", methods=["GET"], strict_slashes=True)
@@ -40,17 +40,17 @@ def delete_user(user_id):
 
     storage.delete(user)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
 @app_views.route("/user", methods=["POST"], strict_slashes=True)
 @swag_from("documentation/user/post_user.yml", methods=["POST"])
 def post_user():
     """create a new user"""
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Not a valid json")
 
-    req = request.form.to_dict()
+    req = request.get_json()
     req = check_keys(
         req,
         [
@@ -83,7 +83,7 @@ def post_user():
     instance.id = str(uuid4())
     storage.new(instance)
     storage.save()
-    return make_response(jsonify(instance.to_dict()), 201)
+    return jsonify(instance.to_dict()), 201
 
 
 @app_views.route("/user/<user_id>", methods=["PUT"], strict_slashes=True)
@@ -94,10 +94,10 @@ def put_user(user_id):
     if not user:
         abort(404)
 
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Invalid JSON")
 
-    data = request.form.to_dict()
+    data = request.get_json()
     data = check_keys(
         data,
         [
@@ -117,4 +117,4 @@ def put_user(user_id):
     for key, val in data.items():
         setattr(user, key, val)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
