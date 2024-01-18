@@ -4,6 +4,7 @@ import Modal from "./modal";
 import { BuyCoins, TransactionHistory } from "../data";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function SellCoinForm({
   formType,
@@ -94,48 +95,109 @@ function SellCoinForm({
     }
   };
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
+
     const transactionId = generateUniqueTransactionId();
 
-    const existingTransactionIndex = TransactionHistory.findIndex(
-      (transaction) => transaction.transactionId === transactionId
-    );
-
     const transaction = {
-      coinIcon: selectedCoinInfo.image,
-      transactionId: transactionId,
-      coin: selectedCoin,
-      coinQuantity: quantity,
+      // coinIcon: selectedCoinInfo.image,
+      // transactionId: transactionId,
+      coinName: selectedCoin,
+      quantity: quantity,
       valueUsd: valueUsd,
       valueInNaira: valueInNaira,
-      screenShot: file,
-      user: "Andara Daniel",
-      userId: "",
-      dateTimeCreated: new Date(),
-      bankName: "Opay",
-      accountName: "Test Account",
-      accountNumber: "12345678",
-      transactionStatus: "Awaiting Confirmation",
+      imgUrl: file,
+      userName: "Andara Daniel",
+      userId: transactionId,
+      // dateTimeCreated: new Date(),
+      // bankName: "Opay",
+      // accountName: "Test Account",
+      // accountNumber: "12345678",
+      status: "Awaiting Confirmation",
     };
 
-    if (existingTransactionIndex !== -1) {
-      TransactionHistory[existingTransactionIndex] = transaction;
-    } else {
-      // If the transaction ID does not exist, add the new transaction
-      TransactionHistory.push(transaction);
-    }
+    fetch("http://localhost:5000/api/transaction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any additional headers if needed
+      },
+      body: JSON.stringify(transaction),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the successful response data
+        console.log(data);
+        toast.success("Order Successful!");
+        closeModal();
+      })
+      .catch((error) => {
+        // Handle errors during the fetch
+        console.error("Error submitting transaction:", error);
+        toast.error("Error submitting transaction. Please try again.");
+      });
+  }
 
-    // Store the updated TransactionHistory in local storage
-    localStorage.setItem(
-      "TransactionHistory",
-      JSON.stringify(TransactionHistory)
-    );
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const transactionId = generateUniqueTransactionId();
 
-    // console.log(transaction);
-    toast.success("Order Successfull!");
-    closeModal();
-  };
+  //   const existingTransactionIndex = TransactionHistory.findIndex(
+  //     (transaction) => transaction.transactionId === transactionId
+  //   );
+
+  //   const transaction = {
+  //     coinIcon: selectedCoinInfo.image,
+  //     transactionId: transactionId,
+  //     coin: selectedCoin,
+  //     coinQuantity: quantity,
+  //     valueUsd: valueUsd,
+  //     valueInNaira: valueInNaira,
+  //     screenShot: file,
+  //     user: "Andara Daniel",
+  //     userId: "",
+  //     dateTimeCreated: new Date(),
+  //     bankName: "Opay",
+  //     accountName: "Test Account",
+  //     accountNumber: "12345678",
+  //     transactionStatus: "Awaiting Confirmation",
+  //   };
+
+  //   // if (existingTransactionIndex !== -1) {
+  //   //   TransactionHistory[existingTransactionIndex] = transaction;
+  //   // } else {
+  //   //   // If the transaction ID does not exist, add the new transaction
+  //   //   TransactionHistory.push(transaction);
+  //   // }
+
+  //   // // Store the updated TransactionHistory in local storage
+  //   // localStorage.setItem(
+  //   //   "TransactionHistory",
+  //   //   JSON.stringify(TransactionHistory)
+  //   // );
+
+  //   try {
+  //     // Make an HTTP POST request to your API endpoint
+  //     const response = await axios.post(
+  //       "http://localhost:5000/api/transactions",
+  //       transaction
+  //     );
+
+  //     // Handle the response as needed
+  //     console.log(response.data); // Log the response data
+  //     toast.success("Order Successful!");
+  //     closeModal();
+  //   } catch (error) {
+  //     console.error("Error submitting transaction:", error);
+  //     toast.error("Error submitting transaction. Please try again.");
+  //   }
+  // };
 
   const handleCopyClick = () => {
     const walletAddress = selectedCoinInfo?.walletAddress;
