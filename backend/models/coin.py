@@ -24,6 +24,5 @@ class Coin(BaseModel, storage.Model):
     name = storage.Column(storage.String(128), nullable=False)
     logo = storage.Column(storage.String(128), nullable=False)
     abv = storage.Column(storage.String(20), nullable=False)
-    price = storage.Column(storage.Float, nullable=False)
     walletAddress = storage.Column(storage.String(128), nullable=False)
     unitPrice = storage.Column(storage.Float, nullable=False)
