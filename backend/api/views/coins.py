@@ -17,7 +17,7 @@ from models.coin import Coin
 def get_coins():
     """retreves a list containing all coins in the database"""
     all_coins = storage.all(Coin)
-    return make_response(jsonify([coin.to_dict() for coin in all_coins], 200))
+    return jsonify([coin.to_dict() for coin in all_coins], 200)
 
 
 @app_views.route("/coin/<coin_id>", methods=["GET"], strict_slashes=True)
@@ -41,17 +41,17 @@ def delete_coin(coin_id):
 
     storage.delete(coin)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
 @app_views.route("/coin", methods=["POST"], strict_slashes=True)
 @swag_from("documentation/coin/post_coin.yml", methods=["POST"])
 def post_coin():
     """create a new coin"""
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Not a valid json")
 
-    req = request.form.to_dict()
+    req = request.get_json()
     req = check_keys(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
     validate_object(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
     instance = Coin(**req)
@@ -59,7 +59,7 @@ def post_coin():
 
     storage.new(instance)
     storage.save()
-    return make_response(jsonify(instance.to_dict()), 201)
+    return jsonify(instance.to_dict()), 201
 
 
 @app_views.route("/coin/<coin_id>", methods=["PUT"], strict_slashes=True)
@@ -70,16 +70,16 @@ def put_coin(coin_id):
     if not coin:
         abort(404)
 
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Invalid JSON")
 
-    data = request.form.to_dict()
+    data = request.get_json()
     data = check_keys(data, ["name", "logo", "abv", "walletAddress", "unitPrice"])
 
     for key, val in data.items():
         setattr(coin, key, val)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
 @app_views.route("/fullcoins", methods=["GET"])

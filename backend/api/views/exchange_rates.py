@@ -26,10 +26,10 @@ def latest_exchange_rate():
 @swag_from("documentation/exchange_rate/exchange_rate.yml", methods=["POST"])
 def post_exchange_rate():
     """create a new exchange_rate"""
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Not a valid json")
 
-    req = request.form.to_dict()
+    req = request.get_json()
     req = check_keys(req, ["rate"])
     validate_object(req, ["rate"])
 
@@ -38,7 +38,7 @@ def post_exchange_rate():
 
     storage.new(instance)
     storage.save()
-    return make_response(jsonify(instance.to_dict()), 201)
+    return jsonify(instance.to_dict()), 201
 
 
 @app_views.route(
@@ -51,12 +51,12 @@ def put_exchange_rate(exchange_rate_id):
     if not rate:
         abort(404)
 
-    if not request.form.to_dict():
+    if not request.get_json():
         abort(404, description="Invalid JSON")
 
-    data = request.form.to_dict()
+    data = request.get_json()
     data = check_keys(data, ["rate"])
     for key, val in data.items():
         setattr(rate, key, val)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
