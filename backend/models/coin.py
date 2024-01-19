@@ -16,6 +16,7 @@ class Coin(BaseModel, storage.Model):
         name (str): The name of the coin
         logo (str): The logo of the coin
         abv (str): abbreviation of the coin name
+        exchangeRate (float): the price of a single coin
         walletAddress (str): The address of the crypto wallet for coin payments
     """
 
@@ -23,4 +24,5 @@ class Coin(BaseModel, storage.Model):
     name = storage.Column(storage.String(128), nullable=False)
     logo = storage.Column(storage.String(128), nullable=False)
     abv = storage.Column(storage.String(20), nullable=False)
+    exchangeRate = storage.Column(storage.Float, nullable=False)
     walletAddress = storage.Column(storage.String(128), nullable=False)

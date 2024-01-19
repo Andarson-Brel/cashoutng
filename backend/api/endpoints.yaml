@@ -47,6 +47,7 @@ POST /api/coin: add a new coin to the database
       logo: string REQUIRED,
       abv: string REQUIRED,
       walletAddress: string REQUIRED,
+      exchangeRate: float REQUIRED,
     }
 
 PUT /api/coin/<coin_id>: edit a coin with the matching id
