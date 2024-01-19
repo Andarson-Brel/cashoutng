@@ -13,6 +13,7 @@ POST /api/user: add a new user to the database
       bank: string REQUIRED,
       accountName: string REQUIRED,
       accountNumber: string REQUIRED, 
+      phoneNumber: string REQUIRED, 
     }
 PUT /api/user/<user_id>: edit a user with the matching id
 
@@ -45,7 +46,6 @@ POST /api/coin: add a new coin to the database
       name: string REQUIRED,
       logo: string REQUIRED,
       abv: string REQUIRED,
-      unitPrice: float REQUIRED,
       walletAddress: string REQUIRED,
     }
 

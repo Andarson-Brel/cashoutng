@@ -5,7 +5,6 @@ Define the Transaction class for the 'transactions' table in the database.
 
 from models import storage
 from models.base_model import BaseModel
-from models.coin import Coin
 
 
 class Transaction(BaseModel, storage.Model):
@@ -18,8 +17,8 @@ class Transaction(BaseModel, storage.Model):
         quantity (int): The amount of coins
         valueUsd (float): The price in dollars
         valueInNaira (float): The price in naira
-        userName (str): The name of the user that carried out the transaction
-        coinName (str): The name of the coin sold
+        userId (str): The id of the user that carried out the transaction
+        coinId (str): The id of the coin sold
     """
 
     __tablename__ = "transaction"

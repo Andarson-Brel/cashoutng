@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Define the Transaction class for the 'transactions' table in the database.
+Define the ExchangeRate class for the 'exchange_rates' table in the database.
 """
 
 from models import storage

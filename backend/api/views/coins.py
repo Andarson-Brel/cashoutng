@@ -52,8 +52,8 @@ def post_coin():
         abort(404, description="Not a valid json")
 
     req = request.get_json()
-    req = check_keys(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
-    validate_object(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+    req = check_keys(req, ["name", "logo", "abv", "walletAddress"])
+    validate_object(req, ["name", "logo", "abv", "walletAddress"])
     instance = Coin(**req)
     instance.id = str(uuid4())
 

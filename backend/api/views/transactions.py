@@ -42,8 +42,7 @@ def get_all_users_transactions(user_id):
         # transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
 
-    print(all_t)
-    return make_response({}, 200)
+    return make_response(all_t, 200)
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["GET"], strict_slashes=True)
@@ -64,7 +63,6 @@ def get_one_transaction(transaction_id):
 @swag_from("documentation/transaction/post_transaction.yml", methods=["POST"])
 def post_transaction():
     """create a new transaction"""
-
     if not request.get_json():
         abort(404, description="Not a valid json")
 
