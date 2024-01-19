@@ -14,15 +14,15 @@ class User(BaseModel, storage.Model):
     Attributes:
         __tablename__ (str): The name of the database table.
         email (str): The email address of the user. Required field.
-        first_name (str): The first name of the user. Required field.
-        last_name (str): The last name of the user. Required field.
+        firstName (str): The first name of the user. Required field.
+        lastName (str): The last name of the user. Required field.
         username (str): The username chosen by the user. Required field.
-        password_hash (str): The hashed password of the user. Required field.
-        profile_pic_url (str): The URL of the user's profile picture.
-        is_admin (bool): Whether the user is an administrator
+        password (str): The hashed password of the user. Required field.
+        isAdmin (bool): Whether the user is an administrator
         bank (str): the name of the users bank. Required field
-        account_name (str): The name on the user's account. Required field
-        account_number (str): The user's account number. Required field
+        accountName (str): The name on the user's account. Required field
+        accountNumber (str): The user's account number. Required field
+        phoneNumber (str): The user's phone number. Required field
     """
 
     __tablename__ = "user"
@@ -35,6 +35,7 @@ class User(BaseModel, storage.Model):
     bank = storage.Column(storage.String(128), nullable=False)
     accountName = storage.Column(storage.String(128), nullable=False)
     accountNumber = storage.Column(storage.String(128), nullable=False)
+    phoneNumber = storage.Column(storage.String(128), nullable=False)
 
     def is_active(self):
         # Define your own logic for determining if the user is active or not

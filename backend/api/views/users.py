@@ -46,6 +46,7 @@ def delete_user(user_id):
 @app_views.route("/user", methods=["POST"], strict_slashes=True)
 @swag_from("documentation/user/post_user.yml", methods=["POST"])
 def post_user():
+    print(request.form)
     """create a new user"""
     if not request.get_json():
         abort(404, description="Not a valid json")
@@ -62,6 +63,7 @@ def post_user():
             "bank",
             "accountName",
             "accountNumber",
+            "phoneNumber",
         ],
     )
     validate_object(
@@ -75,6 +77,7 @@ def post_user():
             "bank",
             "accountName",
             "accountNumber",
+            "phoneNumber",
         ],
     )
     if "isAdmin" in req:

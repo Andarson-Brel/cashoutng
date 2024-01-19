@@ -22,7 +22,7 @@ def get_transactions():
     for tran in all_transactions:
         transaction = tran.to_dict()
         # transaction["user"] = tran.user.to_dict()
-        # transaction["coin"] = tran.coin.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
     return jsonify(all_t, 200)
 
@@ -39,11 +39,10 @@ def get_all_users_transactions(user_id):
     for tran in all_transactions:
         transaction = tran.to_dict()
         # transaction["user"] = tran.user.to_dict()
-        # transaction["coin"] = tran.coin.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
 
-    print(all_t)
-    return make_response({}, 200)
+    return make_response(all_t, 200)
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["GET"], strict_slashes=True)
@@ -54,7 +53,7 @@ def get_one_transaction(transaction_id):
     if transaction:
         tran: dict = transaction.to_dict()
         # tran["user"] = transaction.user.to_dict()
-        # tran["coin"] = transaction.coin.to_dict()
+        tran["coin"] = transaction.coin.to_dict()
         return jsonify(tran, 200)
 
     return abort(404)
@@ -64,7 +63,6 @@ def get_one_transaction(transaction_id):
 @swag_from("documentation/transaction/post_transaction.yml", methods=["POST"])
 def post_transaction():
     """create a new transaction"""
-
     if not request.get_json():
         abort(404, description="Not a valid json")
 

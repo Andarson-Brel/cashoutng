@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Define the User class for the 'users' table in the database.
+Define the Coin class for the 'coins' table in the database.
 """
 
 from models.base_model import BaseModel
@@ -15,8 +15,8 @@ class Coin(BaseModel, storage.Model):
         __tablename__ (str): The name of the database table.
         name (str): The name of the coin
         logo (str): The logo of the coin
-        price (float): The current price of the coin
         abv (str): abbreviation of the coin name
+        exchangeRate (float): the price of a single coin
         walletAddress (str): The address of the crypto wallet for coin payments
     """
 
@@ -24,5 +24,5 @@ class Coin(BaseModel, storage.Model):
     name = storage.Column(storage.String(128), nullable=False)
     logo = storage.Column(storage.String(128), nullable=False)
     abv = storage.Column(storage.String(20), nullable=False)
+    exchangeRate = storage.Column(storage.Float, nullable=False)
     walletAddress = storage.Column(storage.String(128), nullable=False)
-    unitPrice = storage.Column(storage.Float, nullable=False)

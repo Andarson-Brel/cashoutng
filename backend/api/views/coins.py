@@ -52,8 +52,8 @@ def post_coin():
         abort(404, description="Not a valid json")
 
     req = request.get_json()
-    req = check_keys(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
-    validate_object(req, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+    req = check_keys(req, ["name", "logo", "abv", "walletAddress", "exchangeRate"])
+    validate_object(req, ["name", "logo", "abv", "walletAddress", "exchangeRate"])
     instance = Coin(**req)
     instance.id = str(uuid4())
 
@@ -74,7 +74,7 @@ def put_coin(coin_id):
         abort(404, description="Invalid JSON")
 
     data = request.get_json()
-    data = check_keys(data, ["name", "logo", "abv", "walletAddress", "unitPrice"])
+    data = check_keys(data, ["name", "logo", "abv", "walletAddress", "exchangeRate"])
 
     for key, val in data.items():
         setattr(coin, key, val)
