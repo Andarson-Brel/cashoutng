@@ -18,6 +18,12 @@ function App() {
   const [bankList, setBankList] = useState([]);
   const [userData, setUserData] = useState([]);
   const [transactionHistory, setTransactionHistory] = useState([]);
+  const [dataTransaction, setDataTransaction] = useState([]);
+  const [response, setResponse] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [allCoins, setAllCoins] = useState([]);
+
+  const [testCoin, setTestCoin] = useState([]);
 
   useEffect(() => {
     const storedTransaction = localStorage.getItem("TransactionHistory");
@@ -47,31 +53,68 @@ function App() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
-  //     )
-  //     .then((response) => {
-  //       setCoins(response.data);
-  //       console.log("hello world");
-  //     })
-  //     .catch((error) => {
-  //       toast.error("Error fetching coin data");
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/transactions")
+      .then((response) => {
+        setDataTransaction(response.data[0]);
+      })
+      .catch((error) => {
+        toast(error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/coins")
+      .then((response) => {
+        setAllCoins(response.data[0]);
+      })
+      .catch((error) => {
+        toast(error);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/users")
+      .then((response) => {
+        setAllUsers(response.data[0]);
+      })
+      .catch((error) => {
+        toast(error);
+      });
+  }, []);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://rest.coinapi.io/v1/exchangerate/BTC/USD",
+          {
+            headers: {
+              "X-CoinAPI-Key": "F85CC588-89CE-4220-AB28-EF6E4C801297", // Replace with your API key
+            },
+          }
+        );
+        setTestCoin(response.data);
+      } catch (error) {
+        setError(error);
+      }
+    };
 
+    fetchData();
+  }, []);
+  console.log("testCoin:", testCoin);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&locale=en&api_key=CG-8RfyawE6WFgyRVRzeTss94Rn"
         );
         const result = await response.json();
         setCoins(result);
+        console.log(result);
       } catch (error) {
         console.log(error);
       } finally {
@@ -81,13 +124,18 @@ function App() {
 
     fetchData();
   }, []);
+
   const bankNames = bankList.map((bank) => {
     return bank.bank_name;
   });
-  const coinNames = coins.map((coin) => {
+  const coinNames = allCoins.map((coin) => {
     return coin.name;
   });
-  bankNames.push("Opay");
+
+  // // bankNames.push("Opay");
+  // console.log("all coind:", allCoins);
+  // console.log("all users", allUsers);
+  console.log("all transactions", dataTransaction);
 
   return (
     <>
@@ -106,6 +154,7 @@ function App() {
           element={
             <DashBoard
               coins={coins}
+              dbCoins={allCoins}
               coinNames={coinNames}
               transactionHistory={transactionHistory}
             />
@@ -114,13 +163,15 @@ function App() {
         <Route path="profile" element={<Profile />} />
         <Route
           path="history"
-          element={<History transactionHistory={transactionHistory} />}
+          element={<History transactionHistory={dataTransaction} />}
         />
         <Route
           path="Trade"
-          element={<Trade coins={coins} coinNames={coinNames} />}
+          element={
+            <Trade coins={coins} coinNames={coinNames} dbCoins={allCoins} />
+          }
         />
-        <Route path="customers" element={<Customers userData={userData} />} />
+        <Route path="customers" element={<Customers userData={allUsers} />} />
         <Route
           path="transaction/:id"
           element={

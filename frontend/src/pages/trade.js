@@ -4,7 +4,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import BuyCoins from "../data";
 import Modal from "../components/modal";
 import TradeContainer from "../components/TradeContainer";
-function Trade({ coins, coinNames }) {
+function Trade({ coins, coinNames, dbCoins }) {
   const [selectedCoinWallet, setSelectedCoinWallet] = useState("");
 
   const updateSelectedCoinWallet = (walletAddress) => {
@@ -76,6 +76,7 @@ function Trade({ coins, coinNames }) {
             cardTitle={`Trade`}
             headtype={"form"}
             coins={coins}
+            dbCoins={dbCoins}
             coinNames={coinNames}
             updateSelectedCoinWallet={updateSelectedCoinWallet}
           />
