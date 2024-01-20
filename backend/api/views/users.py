@@ -43,51 +43,6 @@ def delete_user(user_id):
     return jsonify({}), 200
 
 
-@app_views.route("/user", methods=["POST"], strict_slashes=True)
-@swag_from("documentation/user/post_user.yml", methods=["POST"])
-def post_user():
-    print(request.form)
-    """create a new user"""
-    if not request.get_json():
-        abort(404, description="Not a valid json")
-
-    req = request.get_json()
-    req = check_keys(
-        req,
-        [
-            "email",
-            "password",
-            "firstName",
-            "lastName",
-            "username",
-            "bank",
-            "accountName",
-            "accountNumber",
-            "phoneNumber",
-        ],
-    )
-    validate_object(
-        req,
-        [
-            "email",
-            "password",
-            "firstName",
-            "lastName",
-            "username",
-            "bank",
-            "accountName",
-            "accountNumber",
-            "phoneNumber",
-        ],
-    )
-    if "isAdmin" in req:
-        req["isAdmin"] = bool(int(req["isAdmin"]))
-    instance = User(**req)
-    instance.id = str(uuid4())
-    storage.new(instance)
-    storage.save()
-    return jsonify(instance.to_dict()), 201
-
 
 @app_views.route("/user/<user_id>", methods=["PUT"], strict_slashes=True)
 @swag_from("documentation/user/put_user.yml", methods=["PUT"])

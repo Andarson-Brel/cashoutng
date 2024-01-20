@@ -22,7 +22,7 @@ def get_transactions():
     for tran in all_transactions:
         transaction = tran.to_dict()
         # transaction["user"] = tran.user.to_dict()
-        transaction["coin"] = tran.coin.to_dict()
+        # transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
     return jsonify(all_t, 200)
 
@@ -39,7 +39,7 @@ def get_all_users_transactions(user_id):
     for tran in all_transactions:
         transaction = tran.to_dict()
         # transaction["user"] = tran.user.to_dict()
-        transaction["coin"] = tran.coin.to_dict()
+        # transaction["coin"] = tran.coin.to_dict()
         all_t.append(transaction)
 
     return make_response(all_t, 200)
@@ -53,7 +53,7 @@ def get_one_transaction(transaction_id):
     if transaction:
         tran: dict = transaction.to_dict()
         # tran["user"] = transaction.user.to_dict()
-        tran["coin"] = transaction.coin.to_dict()
+        # tran["coin"] = transaction.coin.to_dict()
         return jsonify(tran, 200)
 
     return abort(404)

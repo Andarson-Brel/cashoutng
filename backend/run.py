@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Flask Application """
-from api.views import app_views
+from api.views import app_views, app_auth
 from flask import Flask, jsonify, make_response
 from flasgger import Swagger
 from flasgger.utils import swag_from
@@ -12,6 +12,7 @@ import os
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["UPLOAD_FOLDER"] = "images"
 app.register_blueprint(app_views)
+app.register_blueprint(app_auth)
 
 with app.app_context():
     storage.create_all()
