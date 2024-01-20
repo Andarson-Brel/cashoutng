@@ -6,17 +6,18 @@ import DashboardContainer from "../components/dashboardContainer";
 import CardHeading from "../components/CardHeading";
 import CoinList from "../components/CoinList";
 // import BuyCoins from "../data";
-import { BuyCoins } from "../data";
+// import { BuyCoins } from "../data";
 import TransactionContainer from "../components/TransactionContainer";
 import TradeContainer from "../components/TradeContainer";
 import AddCoin from "../components/AddCoin";
-import Button from "../components/button";
-import axios from "axios";
+// import Button from "../components/button";
+// import axios from "axios";
 export default function DashBoard({
   coins,
   coinNames,
   transactionHistory,
   user,
+  dbCoins,
 }) {
   const coinsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,21 +30,6 @@ export default function DashBoard({
     );
     setFilteredCoins(filtered);
   }, [coins, searchQuery]);
-
-  // useEffect(() => {
-  // console.log("Before fetch");
-  // fetch("http://localhost:5000/api/coins")
-  // .then((response) => {
-  // console.log("After fetch, before json()");
-  // return response.json();
-  // })
-  // .then((responseData) => {
-  // console.log("After json(), responseData:", responseData.data);
-  // })
-  // .catch((error) => {
-  // console.error("Fetch error:", error);
-  // });
-  // }, []);
 
   const startIndex = (currentPage - 1) * coinsPerPage;
   const endIndex = startIndex + coinsPerPage;
@@ -64,6 +50,9 @@ export default function DashBoard({
     setSearchQuery(event.target.value);
     setCurrentPage(1);
   };
+  const listCoinNames = coins.map((coin) => {
+    return coin.name;
+  });
   return (
     <div className="dashboard-cont">
       <SideNavbar />
@@ -104,24 +93,23 @@ export default function DashBoard({
               </button>
             </div>
           </DashboardContainer>
+          <DashboardContainer width={"50%"}>
+            <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
 
-          {user && user.role === "admin" ? (
-            <DashboardContainer width={"50%"}>
-              <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
-
-              <AddCoin coinList={coinNames} coins={coins} />
-              {BuyCoins.map((coin, i) => (
-                <CoinList
-                  coinSn={i + 1}
-                  coinName={coin.name}
-                  walletAddress={coin.walletAddress}
-                  coinThmb={coin.image}
-                  coinSymbol={coin.symbol}
-                  key={i}
-                />
-              ))}
-            </DashboardContainer>
-          ) : null}
+            <AddCoin coinList={listCoinNames} coins={coins} />
+            {dbCoins.map((coin, i) => (
+              <CoinList
+                coinSn={i + 1}
+                coinName={coin.name}
+                walletAddress={coin.walletAddress}
+                coinThmb={coin.logo}
+                coinSymbol={coin.abv}
+                coinId={coin.id}
+                key={i}
+                exchangeRate={coin.exchangeRate}
+              />
+            ))}
+          </DashboardContainer>
         </div>
         <div className="dashboard-column">
           <TradeContainer
@@ -131,6 +119,7 @@ export default function DashBoard({
             headtype={"form"}
             coins={coins}
             coinNames={coinNames}
+            dbCoins={dbCoins}
           />
           <TransactionContainer
             dashboardWidth={"50%"}

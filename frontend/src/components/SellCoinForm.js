@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Button from "./button";
 import Modal from "./modal";
-import { BuyCoins, TransactionHistory } from "../data";
+// import { BuyCoins, TransactionHistory } from "../data";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Rate from "./rate";
 
 function SellCoinForm({
   formType,
@@ -12,6 +13,7 @@ function SellCoinForm({
   coins,
   coinNames,
   updateSelectedCoinWallet,
+  dbCoins,
 }) {
   const [selectedCoin, setSelectedCoin] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -21,7 +23,7 @@ function SellCoinForm({
   const [isCopied, setIsCopied] = useState(false);
   const [isModalCopied, setIsModalCopied] = useState(false);
   const [file, setFile] = useState(null);
-  const todayRate = 1210;
+  // const todayRate = 1210;
   const openModal = (e) => {
     e.preventDefault();
 
@@ -50,9 +52,7 @@ function SellCoinForm({
   const handleQuickTradeButtonClick = (buttonText, e) => {
     e.preventDefault();
     setActiveButton(buttonText);
-    const selectedCoinWallet = BuyCoins.find(
-      (coin) => coin.symbol === buttonText
-    );
+    const selectedCoinWallet = dbCoins.find((coin) => coin.abv === buttonText);
 
     setSelectedCoin(selectedCoinWallet.name);
     if (selectedCoinWallet) {
@@ -67,7 +67,7 @@ function SellCoinForm({
   const handleCoinChange = (event) => {
     const selectedCoinName = event.target.value;
     setSelectedCoin(selectedCoinName);
-    const selectedCoinWallet = BuyCoins.find(
+    const selectedCoinWallet = dbCoins.find(
       (coin) => coin.name === selectedCoinName
     );
     if (selectedCoinWallet) {
@@ -77,7 +77,22 @@ function SellCoinForm({
     setValueUsd(0);
     setQuantity(0);
   };
+  const handleUsdValueChange = (event) => {
+    const newValueUsd = parseFloat(event.target.value);
+    setValueUsd(newValueUsd);
 
+    if (selectedCoin && !isNaN(newValueUsd)) {
+      const selectedCoinData = coins.find((coin) => coin.name === selectedCoin);
+
+      if (selectedCoinData) {
+        setQuantity(newValueUsd / selectedCoinData.current_price);
+      } else {
+        console.log("error");
+      }
+    } else {
+      setQuantity(0);
+    }
+  };
   const handleQuantityChange = (event) => {
     const newQuantity = parseFloat(event.target.value);
     setQuantity(newQuantity);
@@ -134,7 +149,7 @@ function SellCoinForm({
       })
       .then((data) => {
         // Handle the successful response data
-        console.log(data);
+        // console.log(data);
         toast.success("Order Successful!");
         closeModal();
       })
@@ -145,61 +160,6 @@ function SellCoinForm({
         toast.error("Error submitting transaction. Please try again.");
       });
   }
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const transactionId = generateUniqueTransactionId();
-
-  //   const existingTransactionIndex = TransactionHistory.findIndex(
-  //     (transaction) => transaction.transactionId === transactionId
-  //   );
-
-  //   const transaction = {
-  //     coinIcon: selectedCoinInfo.image,
-  //     transactionId: transactionId,
-  //     coin: selectedCoin,
-  //     coinQuantity: quantity,
-  //     valueUsd: valueUsd,
-  //     valueInNaira: valueInNaira,
-  //     screenShot: file,
-  //     user: "Andara Daniel",
-  //     userId: "",
-  //     dateTimeCreated: new Date(),
-  //     bankName: "Opay",
-  //     accountName: "Test Account",
-  //     accountNumber: "12345678",
-  //     transactionStatus: "Awaiting Confirmation",
-  //   };
-
-  //   // if (existingTransactionIndex !== -1) {
-  //   //   TransactionHistory[existingTransactionIndex] = transaction;
-  //   // } else {
-  //   //   // If the transaction ID does not exist, add the new transaction
-  //   //   TransactionHistory.push(transaction);
-  //   // }
-
-  //   // // Store the updated TransactionHistory in local storage
-  //   // localStorage.setItem(
-  //   //   "TransactionHistory",
-  //   //   JSON.stringify(TransactionHistory)
-  //   // );
-
-  //   try {
-  //     // Make an HTTP POST request to your API endpoint
-  //     const response = await axios.post(
-  //       "http://localhost:5000/api/transactions",
-  //       transaction
-  //     );
-
-  //     // Handle the response as needed
-  //     console.log(response.data); // Log the response data
-  //     toast.success("Order Successful!");
-  //     closeModal();
-  //   } catch (error) {
-  //     console.error("Error submitting transaction:", error);
-  //     toast.error("Error submitting transaction. Please try again.");
-  //   }
-  // };
 
   const handleCopyClick = () => {
     const walletAddress = selectedCoinInfo?.walletAddress;
@@ -223,11 +183,12 @@ function SellCoinForm({
       }, 2000);
     }
   };
-  const selectedCoinInfo = BuyCoins.find((coin) => coin.name === selectedCoin);
-  const valueInNaira = Math.round(valueUsd * todayRate);
-  // console.log(selectedCoinInfo?.image);
+  const selectedCoinInfo = dbCoins.find((coin) => coin.name === selectedCoin);
+  const valueInNaira = Math.round(valueUsd * selectedCoinInfo?.exchangeRate);
+
   return (
     <form className="trade-form" id="trade-form">
+      <Rate dbCoins={dbCoins} />
       <p className="walletAddress-cont">
         {" "}
         Copy This Wallet Addres:{" "}
@@ -302,19 +263,20 @@ function SellCoinForm({
           </Button>
         </div>
       )}
-
+      <label>Quantity:</label>
       <input
         type="number"
         placeholder="Quantity"
         value={quantity}
         onChange={handleQuantityChange}
       />
+      <label>Amount in USD:</label>
 
       <input
-        // type="number"
+        type="number"
         placeholder="Amount in USD"
-        value={`$${valueUsd.toFixed(2)}`}
-        readOnly
+        value={valueUsd}
+        onChange={handleUsdValueChange}
       />
       <hr />
       <div className="total">

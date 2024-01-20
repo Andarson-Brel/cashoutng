@@ -14,7 +14,7 @@ function TransactionContainer({ dashboardWidth, transactionHistory }) {
               <div className="notif-icon-cont ">
                 <img
                   className="notif-icon"
-                  src={transaction?.coinIcon}
+                  src={transaction?.logo}
                   alt="coin icon"
                 />
               </div>

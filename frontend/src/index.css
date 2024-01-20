@@ -15,7 +15,7 @@ a {
 li {
   list-style: none;
 }
-
+/*  */
 /* Modal.css */
 .close-btn {
   width: 30px;
@@ -703,4 +703,8 @@ option .total-desc,
 .coin-price {
   font-weight: bold;
   color: #8f9090;
+}
+.update-input {
+  width: 35%;
+  padding: 0.5rem 0;
 }

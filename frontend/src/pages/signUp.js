@@ -70,32 +70,32 @@ export default function SignUpPgae({ bankNames, bankList }) {
       formData.accountNumber &&
       formData.selectedBank
     ) {
-      const existingUserData =
-        JSON.parse(localStorage.getItem("userDatas")) || [];
+      const userData = {
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+        bank: formData.selectedBank,
+        accountNumber: formData.accountNumber,
+        accountName: formData.accountName,
+        isAdmin: false,
+        username: `${formData.firstName} ${formData.lastName}`,
+        // userId: formData.userId,
+        // bankCode: formData.bankCode,
+      };
 
-      const userExists = existingUserData.some(
-        (user) => user.email === formData.email
-      );
-
-      if (!userExists) {
-        const updatedUserData = [...existingUserData, formData];
-
-        localStorage.setItem("userDatas", JSON.stringify(updatedUserData));
-      }
-
-      setFormData({
-        email: "",
-        firstName: "",
-        lastName: "",
-        phoneNumber: "",
-        password: "",
-        selectedBank: "",
-        accountNumber: "",
-        accountName: "",
-        userRole: "user",
-      });
-      navigate("/dashboard");
-      toast.success("Account Created Successfully!");
+      axios
+        .post("http://localhost:5000/api/user", userData)
+        .then((response) => {
+          // Handle success, e.g., redirect to dashboard
+          navigate("/dashboard");
+          toast.success("Account Created Successfully!");
+        })
+        .catch((error) => {
+          // Handle error, e.g., show error toast
+          toast.error("Failed to create account. Please try again.");
+        });
     } else {
       toast.error("All Fields are required");
     }

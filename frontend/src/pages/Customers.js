@@ -9,8 +9,8 @@ function Customers({ userData }) {
       <div className="dashboard-main">
         <DashboardHeader pageTitle={"Customers"} />
         {console.log(userData)}
-        {userData.map((user) => (
-          <div className="Customer-container">
+        {userData.map((user, i) => (
+          <div className="Customer-container" key={i}>
             <li className="display-flex-top">
               <p>
                 {user.firstName} {user.lastName}

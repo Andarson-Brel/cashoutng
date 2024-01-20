@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { BuyCoins } from "../data";
 import { toast } from "react-toastify";
 import Button from "./button";
 
 function AddCoin({ coins, coinList }) {
   const [selectedCoin, setSelectedCoin] = useState("");
-  const [coinInfo, setCoinInfo] = useState({ image: "", name: "", symbol: "" });
+  const [coinInfo, setCoinInfo] = useState({
+    logo: "",
+    name: "",
+    abv: "",
+    exchangeRate: "",
+  });
   const [walletAddress, setWalletAddress] = useState("");
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -19,37 +25,56 @@ function AddCoin({ coins, coinList }) {
 
     if (selectedCoinData) {
       setCoinInfo({
-        image: selectedCoinData.image,
+        logo: selectedCoinData.image,
         name: selectedCoinData.name,
-        symbol: selectedCoinData.symbol,
+        abv: selectedCoinData.symbol,
+        exchangeRate: "", // Clear the exchange rate if the coin changes
       });
     } else {
-      setCoinInfo({ image: "", name: "", symbol: "" });
+      setCoinInfo({ logo: "", name: "", abv: "", exchangeRate: "" });
     }
   };
+  // console.log(selectedCoin);
   const toggleFormVisibility = () => {
     setIsFormVisible(!isFormVisible);
   };
-  const handleAddCoin = (e) => {
+
+  const handleAddCoin = async (e) => {
     e.preventDefault();
-    // Validate if a coin is selected and wallet address is provided
-    if (selectedCoin && walletAddress) {
+
+    // Validate if a coin is selected, wallet address is provided, and exchange rate is entered
+    if (selectedCoin && walletAddress && coinInfo.exchangeRate) {
       const newCoin = { ...coinInfo, walletAddress };
-      BuyCoins.push(newCoin);
-      //   BuyCoins.push([coinInfo, walletAddress]);
 
-      // Clear the selected coin, coinInfo, and wallet address
-      setSelectedCoin("");
-      setCoinInfo({ image: "", name: "", symbol: "" });
-      setWalletAddress("");
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/coin",
+          newCoin
+        );
 
-      // You can also perform any other necessary actions here
-      toast.success("Coin added successfully");
+        if (response.status === 201) {
+          // Clear the selected coin, coinInfo, and wallet address
+          setSelectedCoin("");
+          setCoinInfo({ logo: "", name: "", abv: "", exchangeRate: "" });
+          setWalletAddress("");
+
+          toast.success("Coin added successfully");
+        } else {
+          toast.error("Failed to add coin. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error adding coin:", error);
+        toast.error("An error occurred. Please try again.");
+      }
     } else {
-      toast.error("Please select a coin and provide a wallet address");
+      toast.error(
+        "Please select a coin, provide a wallet address, and enter the exchange rate"
+      );
     }
   };
 
+  // console.log(coinList);
+  // console.log(coinInfo);
   return (
     <>
       <Button
@@ -84,8 +109,8 @@ function AddCoin({ coins, coinList }) {
           <h5>Add New Coin</h5>
           <select onChange={handleCoinChange} value={selectedCoin}>
             <option value="">Select Coin</option>
-            {coinList.map((coinName) => (
-              <option key={coinName} value={coinName}>
+            {coinList.map((coinName, i) => (
+              <option key={i} value={coinName}>
                 {coinName}
               </option>
             ))}
@@ -96,6 +121,15 @@ function AddCoin({ coins, coinList }) {
             type="text"
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
+          />
+          <input
+            className="walletAddressInput"
+            placeholder="Rate"
+            type="number"
+            value={coinInfo.exchangeRate}
+            onChange={(e) =>
+              setCoinInfo({ ...coinInfo, exchangeRate: e.target.value })
+            }
           />
           <button className="addCoin" type="button" onClick={handleAddCoin}>
             Add Coin
