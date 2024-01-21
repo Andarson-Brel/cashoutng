@@ -1,8 +1,5 @@
-user endpoints
-GET /api/users: returns a list of all registered users
-GET /api/user/<user_id>: retrurn a user with the matching id
-DELETE /api/user/<user_id>: delete a user with the matching id
-POST /api/user: add a new user to the database
+signup and login endpoints
+POST /auth/signup: signs up and logs in the user
     data_schema: {
       firstName: string REQUIRED,
       lastName: string REQUIRED,
@@ -15,6 +12,20 @@ POST /api/user: add a new user to the database
       accountNumber: string REQUIRED, 
       phoneNumber: string REQUIRED, 
     }
+
+POST /auth/login: log in with password and email address
+    data_schema: {
+      email: string REQUIRED,
+      password: string REQUIRED,
+    }
+
+POST /auth/logout: log out user
+    data_schema: {}
+
+user endpoints
+GET /api/users: returns a list of all registered users
+GET /api/user/<user_id>: retrurn a user with the matching id
+DELETE /api/user/<user_id>: delete a user with the matching id
 PUT /api/user/<user_id>: edit a user with the matching id
 
 transaction endpoints

@@ -86,7 +86,7 @@ export default function SignUpPgae({ bankNames, bankList }) {
       };
 
       axios
-        .post("http://localhost:5000/api/user", userData)
+        .post("http://localhost:5000/auth/signup", userData)
         .then((response) => {
           // Handle success, e.g., redirect to dashboard
           navigate("/dashboard");

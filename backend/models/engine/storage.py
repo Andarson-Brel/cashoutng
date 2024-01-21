@@ -55,6 +55,18 @@ class Storage(SQLAlchemy):
         else:
             return None
 
+    def get_email(self, cls, email):
+        """
+        Returns the object based on the class name and its email, or
+        None if not found
+        """
+
+        val = self.session.execute(self.select(cls).where(cls.email == email)).scalar()
+        if val:
+            return val
+        else:
+            return None
+
     # def count(self, cls=None):
     #     """
     #     count the number of objects in storage

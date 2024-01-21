@@ -10,6 +10,7 @@ from flask import abort, jsonify, make_response, request
 from helpers.object import check_keys, validate_object
 from models import storage
 from models.coin import Coin
+from flask_login import login_required
 
 
 @app_views.route("/coins", methods=["GET"], strict_slashes=True)
