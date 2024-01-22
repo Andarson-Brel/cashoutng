@@ -32,6 +32,8 @@ def signup_user():
             "accountName",
             "accountNumber",
             "phoneNumber",
+            "isAdmin",
+            "isValidated",
         ],
     )
     validate_object(
