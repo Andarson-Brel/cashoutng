@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 """ objects that handles all default RestFul API actions for User"""
 
-from uuid import uuid4
 
 from api.views import app_views
 from flasgger import swag_from
-from flask import abort, jsonify, make_response, request
-from helpers.object import check_keys, validate_object
+from flask import abort, jsonify, request
+from helpers.object import check_keys
 from models import storage
 from models.user import User
 
@@ -41,7 +40,6 @@ def delete_user(user_id):
     storage.delete(user)
     storage.save()
     return jsonify({}), 200
-
 
 
 @app_views.route("/user/<user_id>", methods=["PUT"], strict_slashes=True)

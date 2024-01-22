@@ -85,13 +85,19 @@ export default function SignUpPgae({ bankNames, bankList }) {
         // bankCode: formData.bankCode,
       };
 
+      axios.interceptors.request.use((config) => {
+        config.withCredentials = true;
+        return config;
+      });
       axios
         .post("http://localhost:5000/auth/signup", userData)
         .then((response) => {
           // Handle success, e.g., redirect to dashboard
           navigate("/dashboard");
+          console.log("signup successful");
           toast.success("Account Created Successfully!");
         })
+        .then((response) => {})
         .catch((error) => {
           // Handle error, e.g., show error toast
           toast.error("Failed to create account. Please try again.");

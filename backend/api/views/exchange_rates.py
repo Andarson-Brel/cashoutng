@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from api.views import app_views
 from flasgger import swag_from
-from flask import abort, jsonify, make_response, request
+from flask import abort, jsonify, request
 from helpers.object import check_keys, validate_object
 from models import storage
 from models.exchange_rate import ExchangeRate

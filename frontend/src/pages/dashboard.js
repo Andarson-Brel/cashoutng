@@ -42,6 +42,17 @@ export default function DashBoard({
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  // GET CURRENT USER END POINT (!IMPORTANT ALWAYS ADD { credentials: "include" } WHEN QUERYING THE CURRENT USER)
+  fetch("http://localhost:5000/auth/current_user", { credentials: "include" })
+    .then((response) => {
+      console.log(response.json());
+      // Handle success, e.g., redirect to dashboard
+    })
+    .catch((error) => {
+      // Handle error, e.g., show error toast
+      console.log(error);
+    });
+
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
