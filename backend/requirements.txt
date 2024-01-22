@@ -2,4 +2,3 @@ flask
 flask_sqlalchemy
 flasgger
 flask-cors
-flask-login

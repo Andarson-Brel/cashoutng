@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """ Flask Application """
-from api.views import app_views, app_auth
-from flask import Flask, jsonify, make_response
+# stay
+from api.views import app_auth, app_views
 from flasgger import Swagger
-from flasgger.utils import swag_from
+from flask import jsonify, make_response
 from models import app, storage
 
+print("run third")
 
 import os
 

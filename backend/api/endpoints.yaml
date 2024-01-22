@@ -10,7 +10,8 @@ POST /auth/signup: signs up and logs in the user
       bank: string REQUIRED,
       accountName: string REQUIRED,
       accountNumber: string REQUIRED, 
-      phoneNumber: string REQUIRED, 
+      phoneNumber: string REQUIRED,
+      isValidated: boolean (default false) OPTIONAL
     }
 
 POST /auth/login: log in with password and email address

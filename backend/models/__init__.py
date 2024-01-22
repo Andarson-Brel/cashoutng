@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
-from flask_login import LoginManager
+
 from models.engine.storage import Storage
 
 # from models.engine.storage import Storage
@@ -12,16 +12,23 @@ app = Flask(__name__)
 CORS(
     app,
     resources={
-        r"/api/*": {"origins": "http://localhost:3000"},
-        r"/auth/*": {"origins": "http://localhost:3000"},
+        r"/api/*": {"origins": "*"},
+        r"/auth/*": {"origins": "*"},
     },
+    supports_credentials=True,
 )
 
 # Database Configuration
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True  # Use this if serving over HTTPS
 
 # Secret Key
-app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "dgcvhbjhljhibyhbdsbd")
+app.config["SECRET_KEY"] = "bdbdbjfnfgvjnjvdondndnjnn"
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI", "sqlite:///site.db")
-storage = Storage(app)
+app.config["SESSION_PROTECTION"] = "strong"
 
-login_manager = LoginManager(app)
+storage = Storage(app)
+print("first- models")
+
+
+print("getting user")

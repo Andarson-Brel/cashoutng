@@ -3,8 +3,10 @@
 Define the User class for the 'users' table in the database.
 """
 
-from models.base_model import BaseModel
 from models import storage
+from models.base_model import BaseModel
+
+print("user class")
 
 
 class User(BaseModel, storage.Model):
@@ -23,6 +25,7 @@ class User(BaseModel, storage.Model):
         accountName (str): The name on the user's account. Required field
         accountNumber (str): The user's account number. Required field
         phoneNumber (str): The user's phone number. Required field
+        isValidated (bool): Whether the user is email-verified. Required field
     """
 
     __tablename__ = "user"
@@ -36,6 +39,7 @@ class User(BaseModel, storage.Model):
     accountName = storage.Column(storage.String(128), nullable=False)
     accountNumber = storage.Column(storage.String(128), nullable=False)
     phoneNumber = storage.Column(storage.String(128), nullable=False)
+    isValidated = storage.Column(storage.Boolean, nullable=False, default=False)
 
     def is_active(self):
         # Define your own logic for determining if the user is active or not
@@ -45,4 +49,8 @@ class User(BaseModel, storage.Model):
         return True
 
     def get_id(self):
+        print("getting id")
         return self.id
+
+    def is_anonymous(self):
+        return False

@@ -5,10 +5,9 @@ from uuid import uuid4
 
 from api.views import app_auth
 from flasgger import swag_from
-from flask import abort, jsonify, make_response, request
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask import abort, jsonify, request, session
 from helpers.object import check_keys, validate_object
-from models import app, login_manager, storage
+from models import storage
 from models.user import User
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -33,6 +32,8 @@ def signup_user():
             "accountName",
             "accountNumber",
             "phoneNumber",
+            "isAdmin",
+            "isValidated",
         ],
     )
     validate_object(
@@ -58,9 +59,13 @@ def signup_user():
     req["password"] = password
     instance = User(**req)
     instance.id = str(uuid4())
-    login_user(instance)
+
     storage.new(instance)
     storage.save()
+    uss = storage.get(User, instance.id)
+    session["user_id"] = uss.id
+    print(storage.get(User, session["user_id"]))
+    print("=================current user ====================")
     return jsonify({"message": "user created successfully"}), 201
 
 
@@ -89,8 +94,9 @@ def signin_user():
     if not user:
         abort(404)
     if check_password_hash(user.password, req["password"]):
-        login_user(user)
-        return jsonify({"message": "user logged in successfully"})
+        session["user_id"] = user.id
+
+        return jsonify({"message", "log in successfull"}), 200
     else:
         return jsonify({"message": "password is incorrect"}), 404
 
@@ -98,6 +104,18 @@ def signin_user():
 @app_auth.route("/logout", methods=["POST"])
 def signout_user():
     """logout a user"""
+    print("======================loggin out user =================")
+    key = session.pop("user_id", None)
+    if key:
+        return jsonify({"message": "logged out successfully"})
 
-    if current_user.is_authenticated():
-        logout_user()
+
+@app_auth.route("/current_user", methods=["GET"])
+def get_current_user():
+    """get current loggrd in user"""
+    print("=================== get current user =================")
+    current_user = storage.get(User, session.get("user_id"))
+    if current_user:
+        return jsonify(current_user.to_dict())
+    else:
+        return abort(404)

@@ -21,8 +21,10 @@ def get_transactions():
     all_t = []
     for tran in all_transactions:
         transaction = tran.to_dict()
-        # transaction["user"] = tran.user.to_dict()
-        # transaction["coin"] = tran.coin.to_dict()
+        transaction["user"] = tran.user.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
+        del transaction["coinId"]
+        del transaction["userId"]
         all_t.append(transaction)
     return jsonify(all_t, 200)
 
@@ -38,8 +40,8 @@ def get_all_users_transactions(user_id):
     all_t = []
     for tran in all_transactions:
         transaction = tran.to_dict()
-        # transaction["user"] = tran.user.to_dict()
-        # transaction["coin"] = tran.coin.to_dict()
+        transaction["coin"] = tran.coin.to_dict()
+        del transaction["coinId"]
         all_t.append(transaction)
 
     return make_response(all_t, 200)
@@ -52,8 +54,10 @@ def get_one_transaction(transaction_id):
     transaction = storage.get(Transaction, transaction_id)
     if transaction:
         tran: dict = transaction.to_dict()
-        # tran["user"] = transaction.user.to_dict()
-        # tran["coin"] = transaction.coin.to_dict()
+        tran["user"] = transaction.user.to_dict()
+        tran["coin"] = transaction.coin.to_dict()
+        del transaction["coinId"]
+        del transaction["userId"]
         return jsonify(tran, 200)
 
     return abort(404)
