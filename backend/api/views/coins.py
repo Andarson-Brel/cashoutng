@@ -17,7 +17,7 @@ from models.coin import Coin
 def get_coins():
     """retreves a list containing all coins in the database"""
     all_coins = storage.all(Coin)
-    return jsonify([coin.to_dict() for coin in all_coins], 200)
+    return jsonify([coin.to_dict() for coin in all_coins]), 200
 
 
 @app_views.route("/coin/<coin_id>", methods=["GET"], strict_slashes=True)
@@ -26,7 +26,7 @@ def get_one_coin(coin_id):
     """Returns a single coin object for the database"""
     coin = storage.get(Coin, coin_id)
     if coin:
-        return jsonify(coin.to_dict(), 200)
+        return jsonify(coin.to_dict()), 200
 
     return abort(404)
 
@@ -90,4 +90,4 @@ def full_coins():
     response.raise_for_status()
     response = response.json()
 
-    return make_response(response, 200)
+    return make_response(response), 200

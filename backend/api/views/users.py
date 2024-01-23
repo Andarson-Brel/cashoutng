@@ -15,7 +15,7 @@ from models.user import User
 def get_users():
     """retreves a list containing all users in the database"""
     all_users = storage.all(User)
-    return jsonify([user.to_dict() for user in all_users], 200)
+    return jsonify([user.to_dict() for user in all_users]), 200
 
 
 @app_views.route("/user/<user_id>", methods=["GET"], strict_slashes=True)
@@ -24,7 +24,7 @@ def get_one_user(user_id):
     """Returns a single user object for the database"""
     user = storage.get(User, user_id)
     if user:
-        return jsonify(user.to_dict(), 200)
+        return jsonify(user.to_dict()), 200
 
     return abort(404)
 

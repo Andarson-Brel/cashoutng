@@ -26,7 +26,7 @@ def get_transactions():
         del transaction["coinId"]
         del transaction["userId"]
         all_t.append(transaction)
-    return jsonify(all_t, 200)
+    return jsonify(all_t), 200
 
 
 @app_views.route("/<user_id>/transactions", methods=["GET"], strict_slashes=True)
@@ -44,7 +44,7 @@ def get_all_users_transactions(user_id):
         del transaction["coinId"]
         all_t.append(transaction)
 
-    return make_response(all_t, 200)
+    return jsonify(all_t), 200
 
 
 @app_views.route("/transaction/<transaction_id>", methods=["GET"], strict_slashes=True)
@@ -58,7 +58,7 @@ def get_one_transaction(transaction_id):
         tran["coin"] = transaction.coin.to_dict()
         del transaction["coinId"]
         del transaction["userId"]
-        return jsonify(tran, 200)
+        return jsonify(tran), 200
 
     return abort(404)
 
