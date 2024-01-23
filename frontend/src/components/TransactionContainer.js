@@ -8,21 +8,22 @@ function TransactionContainer({ dashboardWidth, transactionHistory }) {
       <CardHeading cardTitle={`Transaction History`} headtype={"card"} />
 
       {transactionHistory?.map((transaction, i) => (
-        <Link key={i} to={`/transaction/${transaction.transactionId}`}>
+        <Link key={i} to={`/transaction/${transaction.id}`}>
           <div className="notification-list-cont display-flex-top">
             <div className="coin-details-cont display-flex-top">
               <div className="notif-icon-cont ">
                 <img
                   className="notif-icon"
-                  src={transaction?.logo}
+                  src={transaction?.coin.logo}
                   alt="coin icon"
                 />
               </div>
               <div className="coin-details">
-                <h5 className="transfered-coin">{transaction.coin}</h5>
+                <h5 className="transfered-coin">{transaction?.coin.name}</h5>
                 <p className="transaction-desc">
-                  Your Sell Order of ${transaction.valueUsd} {transaction.coin}{" "}
-                  has been recieved and is currently under review
+                  Your Sell Order of ${transaction?.valueUsd}{" "}
+                  {transaction?.coin.name} has been recieved and is currently
+                  under review
                 </p>
               </div>
             </div>

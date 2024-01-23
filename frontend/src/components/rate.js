@@ -19,7 +19,7 @@ function Rate({ dbCoins }) {
   return (
     <div>
       <h4>Current Rate</h4>
-      {dbCoins.map((coin) => (
+      {dbCoins?.map((coin) => (
         <p key={coin.id}>
           {coin.name} at ₦{coin.exchangeRate}/$
         </p>

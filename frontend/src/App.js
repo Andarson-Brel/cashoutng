@@ -15,6 +15,7 @@ import axios from "axios";
 import TransactionDetail from "./pages/transaction-detail";
 function App() {
   const [coins, setCoins] = useState([]);
+  const [user, setUser] = useState(null);
   const [bankList, setBankList] = useState([]);
   const [userData, setUserData] = useState([]);
   const [transactionHistory, setTransactionHistory] = useState([]);
@@ -24,24 +25,7 @@ function App() {
   const [allCoins, setAllCoins] = useState([]);
 
   const [testCoin, setTestCoin] = useState([]);
-
-  useEffect(() => {
-    const storedTransaction = localStorage.getItem("TransactionHistory");
-
-    if (storedTransaction) {
-      const parsedTransactions = JSON.parse(storedTransaction);
-      setTransactionHistory(parsedTransactions);
-    }
-  }, []);
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userDatas");
-
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData(parsedUserData);
-    }
-  }, []);
+  // get bank details
   useEffect(() => {
     axios
       .get("https://app.nuban.com.ng/bank_codes.json")
@@ -53,21 +37,63 @@ function App() {
       });
   }, []);
 
+  // get current user
   useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/auth/current_user",
+          { credentials: "include" }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        } else {
+          toast.error(`Error: ${response.status} - ${response.statusText}`);
+        }
+      } catch (error) {
+        toast.error(error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  // get transactionHistory
+  useEffect(() => {
+    console.log("helo");
     axios
       .get("http://localhost:5000/api/transactions")
       .then((response) => {
-        setDataTransaction(response.data[0]);
+        console.log("omo");
+        console.log("response:", response);
+        setDataTransaction(response.data);
       })
       .catch((error) => {
         toast(error);
       });
   }, []);
+
+  // CoinList from database
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/coins")
       .then((response) => {
-        setAllCoins(response.data[0]);
+        setAllCoins(response.data);
+        // console.log("all coins", allCoins);
+      })
+      .catch((error) => {
+        toast(error);
+      });
+  }, []);
+
+  // all users
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/users")
+      .then((response) => {
+        setUserData(response.data[0]);
       })
       .catch((error) => {
         toast(error);
@@ -84,28 +110,7 @@ function App() {
       });
   }, []);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://rest.coinapi.io/v1/exchangerate/BTC/USD",
-          {
-            headers: {
-              "X-CoinAPI-Key": "F85CC588-89CE-4220-AB28-EF6E4C801297", // Replace with your API key
-            },
-          }
-        );
-        setTestCoin(response.data);
-      } catch (error) {
-        setError(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-  console.log("testCoin:", testCoin);
+  // get coins from coingecko api
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -114,11 +119,11 @@ function App() {
         );
         const result = await response.json();
         setCoins(result);
-        console.log(result);
+        // console.log(result);
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
@@ -128,7 +133,7 @@ function App() {
   const bankNames = bankList.map((bank) => {
     return bank.bank_name;
   });
-  const coinNames = allCoins.map((coin) => {
+  const coinNames = allCoins?.map((coin) => {
     return coin.name;
   });
 
@@ -136,6 +141,8 @@ function App() {
   // console.log("all coind:", allCoins);
   // console.log("all users", allUsers);
   console.log("all transactions", dataTransaction);
+  console.log("all data", userData);
+  console.log("current user", user);
 
   return (
     <>
@@ -156,7 +163,8 @@ function App() {
               coins={coins}
               dbCoins={allCoins}
               coinNames={coinNames}
-              transactionHistory={transactionHistory}
+              transactionHistory={dataTransaction}
+              user={user}
             />
           }
         />
@@ -168,7 +176,12 @@ function App() {
         <Route
           path="Trade"
           element={
-            <Trade coins={coins} coinNames={coinNames} dbCoins={allCoins} />
+            <Trade
+              coins={coins}
+              coinNames={coinNames}
+              dbCoins={allCoins}
+              user={user}
+            />
           }
         />
         <Route path="customers" element={<Customers userData={allUsers} />} />

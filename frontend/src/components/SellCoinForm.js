@@ -14,6 +14,7 @@ function SellCoinForm({
   coinNames,
   updateSelectedCoinWallet,
   dbCoins,
+  user,
 }) {
   const [selectedCoin, setSelectedCoin] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -110,55 +111,37 @@ function SellCoinForm({
     }
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     const transactionId = generateUniqueTransactionId();
 
     const transaction = {
-      // coinIcon: selectedCoinInfo.image,
-      // transactionId: transactionId,
-      // coinName: selectedCoin,
       quantity: quantity,
       valueUsd: valueUsd,
       valueInNaira: valueInNaira,
-      // imgUrl: file,
-      // userName: "Andara Daniel",
-      userId: transactionId,
-      coinId: transactionId,
-      // dateTimeCreated: new Date(),
-      // bankName: "Opay",
-      // accountName: "Test Account",
-      // accountNumber: "12345678",
+      userId: user.id,
+      coinId: selectedCoinInfo.id,
       status: "Awaiting Confirmation",
     };
 
-    fetch("http://localhost:5000/api/transaction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any additional headers if needed
-      },
-      body: JSON.stringify(transaction),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Handle the successful response data
-        // console.log(data);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/transaction",
+        transaction
+      );
+
+      if (response.status === 201) {
+        // Clear the selected coin, coinInfo, and wallet address
         toast.success("Order Successful!");
         closeModal();
-      })
-      .catch((error) => {
-        // Handle errors during the fetch
-        console.log(error.message);
-        console.error("Error submitting transaction:", error);
+      } else {
         toast.error("Error submitting transaction. Please try again.");
-      });
+      }
+    } catch (error) {
+      console.error("Error adding coin:", error);
+      toast.error("An error occurred. Please try again.");
+    }
   }
 
   const handleCopyClick = () => {
@@ -183,7 +166,7 @@ function SellCoinForm({
       }, 2000);
     }
   };
-  const selectedCoinInfo = dbCoins.find((coin) => coin.name === selectedCoin);
+  const selectedCoinInfo = dbCoins?.find((coin) => coin.name === selectedCoin);
   const valueInNaira = Math.round(valueUsd * selectedCoinInfo?.exchangeRate);
 
   return (

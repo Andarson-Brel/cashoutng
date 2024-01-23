@@ -581,7 +581,7 @@ option .total-desc,
   cursor: pointer;
 }
 .walletAddress-cont {
-  margin: 2rem 1rem;
+  margin: 2rem 0;
 }
 .copy-icon {
   cursor: pointer;

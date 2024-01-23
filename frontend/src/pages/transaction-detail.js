@@ -1,12 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideNavbar from "../components/sideNavbar";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function TransactionDetail({ transactionHistory }) {
   const { id } = useParams();
-  const transaction = transactionHistory.find(
-    (transaction) => transaction.transactionId === id
-  );
+  const [transaction, setTransaction] = useState([]);
+  // const transaction = transactionHistory.find(
+  //   (transaction) => transaction.id === id
+  // );
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/transaction/${id}`)
+      .then((response) => {
+        console.log("omo transaction");
+        console.log("response:", response.data);
+        setTransaction(response.data);
+      })
+      .catch((error) => {
+        toast(error);
+      });
+  }, []);
+  console.log("transaction", transaction);
   const [adminTransactionStatus, setAdminTransactionStatus] = useState({
     Declined: false,
     Approved: false,
@@ -41,7 +58,9 @@ function TransactionDetail({ transactionHistory }) {
                 <div className="">
                   <li className="details-list">
                     <span>Coin</span>{" "}
-                    <span className="transactio-value">{transaction.coin}</span>
+                    <span className="transactio-value">
+                      {transaction?.coin?.name}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
@@ -49,7 +68,7 @@ function TransactionDetail({ transactionHistory }) {
                   <li className="details-list">
                     <span>Quantity</span>{" "}
                     <span className="transactio-value">
-                      {transaction.coinQuantity}
+                      {transaction?.quantity}
                     </span>
                   </li>
                   <hr className="transaction-hr" />
@@ -58,7 +77,7 @@ function TransactionDetail({ transactionHistory }) {
                   <li className="details-list">
                     <span>Amount (USD)</span>{" "}
                     <span className="transactio-value">
-                      ${transaction.valueUsd}
+                      ${transaction?.valueUsd}
                     </span>
                   </li>
                   <hr className="transaction-hr" />
@@ -67,7 +86,7 @@ function TransactionDetail({ transactionHistory }) {
                   <li className="details-list">
                     <span>Amount (NGR)</span>{" "}
                     <span className="transactio-value">
-                      ₦{transaction.valueInNaira}
+                      ₦{transaction?.valueInNaira}
                     </span>
                   </li>
                   <hr className="transaction-hr" />
@@ -75,16 +94,16 @@ function TransactionDetail({ transactionHistory }) {
                 <div className="">
                   <li className="details-list">
                     <span>Transaction Id</span>{" "}
-                    <span className="transactio-value">
-                      {transaction.transactionId}
-                    </span>
+                    <span className="transactio-value">{transaction?.id}</span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
                 <div className="">
                   <li className="details-list">
                     <span>Sender</span>{" "}
-                    <span className="transactio-value">{transaction.user}</span>
+                    <span className="transactio-value">
+                      {transaction?.user?.username}
+                    </span>
                   </li>
                   <hr className="transaction-hr" />
                 </div>
@@ -94,7 +113,7 @@ function TransactionDetail({ transactionHistory }) {
                     <li className="details-list">
                       <span>Bank Name</span>{" "}
                       <span className="transactio-value">
-                        {transaction.bankName}
+                        {transaction?.user?.bankName}
                       </span>
                     </li>
                     <hr className="transaction-hr" />
@@ -103,7 +122,7 @@ function TransactionDetail({ transactionHistory }) {
                     <li className="details-list">
                       <span>Account Number</span>{" "}
                       <span className="transactio-value">
-                        {transaction.accountNumber}
+                        {transaction?.user?.accountNumber}
                       </span>
                     </li>
                     <hr className="transaction-hr" />
@@ -112,7 +131,7 @@ function TransactionDetail({ transactionHistory }) {
                     <li className="details-list">
                       <span>Name on Account</span>{" "}
                       <span className="transactio-value">
-                        {transaction.accountName}
+                        {transaction?.user?.accountName}
                       </span>
                     </li>
                     <hr className="transaction-hr" />

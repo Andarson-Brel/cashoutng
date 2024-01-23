@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./button";
 import {
   Sidebar,
@@ -9,10 +9,25 @@ import {
   menuClasses,
   menuItemStyles,
 } from "react-pro-sidebar";
+import axios from "axios";
 // import { useNavigate } from "react-router-dom";
 
 //
 export default function SideNavbar() {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      // Make a POST request to the logout API endpoint
+      await axios.post("http://localhost:5000/api/auth/logout", {});
+
+      // navigate("/");
+      // Redirect to the home page
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Handle error as needed
+    }
+  };
+
   return (
     <>
       <Sidebar
@@ -77,6 +92,12 @@ export default function SideNavbar() {
               <img src="/images/profile.svg" alt="profile-Icon" />
             </span>
             Profile{" "}
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <span className="menuItemSpan">
+              <img src="/images/profile.svg" alt="profile-Icon" />
+            </span>
+            Log Out
           </MenuItem>
         </Menu>
       </Sidebar>

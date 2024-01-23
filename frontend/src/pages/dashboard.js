@@ -42,17 +42,6 @@ export default function DashBoard({
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
-  // GET CURRENT USER END POINT (!IMPORTANT ALWAYS ADD { credentials: "include" } WHEN QUERYING THE CURRENT USER)
-  fetch("http://localhost:5000/auth/current_user", { credentials: "include" })
-    .then((response) => {
-      console.log(response.json());
-      // Handle success, e.g., redirect to dashboard
-    })
-    .catch((error) => {
-      // Handle error, e.g., show error toast
-      console.log(error);
-    });
-
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -105,10 +94,13 @@ export default function DashBoard({
             </div>
           </DashboardContainer>
           <DashboardContainer width={"50%"}>
-            <CardHeading cardTitle={`We Are Buying`} headtype={"card"} />
+            <CardHeading
+              cardTitle={`We Are Currently Buying`}
+              headtype={"card"}
+            />
 
             <AddCoin coinList={listCoinNames} coins={coins} />
-            {dbCoins.map((coin, i) => (
+            {dbCoins?.map((coin, i) => (
               <CoinList
                 coinSn={i + 1}
                 coinName={coin.name}
@@ -131,6 +123,7 @@ export default function DashBoard({
             coins={coins}
             coinNames={coinNames}
             dbCoins={dbCoins}
+            user={user}
           />
           <TransactionContainer
             dashboardWidth={"50%"}

@@ -4,7 +4,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import BuyCoins from "../data";
 import Modal from "../components/modal";
 import TradeContainer from "../components/TradeContainer";
-function Trade({ coins, coinNames, dbCoins }) {
+function Trade({ coins, coinNames, dbCoins, user }) {
   const [selectedCoinWallet, setSelectedCoinWallet] = useState("");
 
   const updateSelectedCoinWallet = (walletAddress) => {
@@ -79,6 +79,7 @@ function Trade({ coins, coinNames, dbCoins }) {
             dbCoins={dbCoins}
             coinNames={coinNames}
             updateSelectedCoinWallet={updateSelectedCoinWallet}
+            user={user}
           />
         </div>
       </div>

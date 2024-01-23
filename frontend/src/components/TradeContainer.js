@@ -10,6 +10,7 @@ function TradeContainer({
   coinNames,
   updateSelectedCoinWallet,
   dbCoins,
+  user,
 }) {
   return (
     <DashboardContainer width={dashboardWidth}>
@@ -20,6 +21,7 @@ function TradeContainer({
         coinNames={coinNames}
         updateSelectedCoinWallet={updateSelectedCoinWallet}
         dbCoins={dbCoins}
+        user={user}
       />
     </DashboardContainer>
   );
