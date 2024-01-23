@@ -18,7 +18,7 @@ export default function SideNavbar() {
   const handleLogout = async () => {
     try {
       // Make a POST request to the logout API endpoint
-      await axios.post("http://localhost:5000/api/auth/logout", {});
+      await axios.post("http://localhost:5000/auth/logout", {});
 
       // navigate("/");
       // Redirect to the home page
