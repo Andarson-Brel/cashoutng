@@ -116,6 +116,6 @@ def get_current_user():
     print("=================== get current user =================")
     current_user = storage.get(User, session.get("user_id"))
     if current_user:
-        return jsonify(current_user.to_dict())
+        return jsonify(current_user.to_dict()), 200
     else:
         return abort(404)

@@ -17,7 +17,7 @@ def latest_exchange_rate():
     """Returns a single exchange_rate object for the database"""
     rate = storage.all(ExchangeRate)
     if rate:
-        return jsonify(rate[0].to_dict(), 200)
+        return jsonify(rate[0].to_dict()), 200
 
     return abort(404)
 
