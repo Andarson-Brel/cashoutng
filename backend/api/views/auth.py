@@ -106,6 +106,7 @@ def signout_user():
     """logout a user"""
     print("======================loggin out user =================")
     key = session.pop("user_id", None)
+    print(key)
     if key:
         return jsonify({"message": "logged out successfully"})
 
