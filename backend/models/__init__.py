@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from models.engine.storage import Storage
+from flask_login import LoginManager
 
 # from models.engine.storage import Storage
 
@@ -28,6 +29,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI", "sqlite:///site
 app.config["SESSION_PROTECTION"] = "strong"
 
 storage = Storage(app)
+login_manager = LoginManager(app)
+
+
 print("first- models")
 
 

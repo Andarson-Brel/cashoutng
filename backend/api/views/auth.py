@@ -6,9 +6,10 @@ from uuid import uuid4
 from api.views import app_auth
 from flasgger import swag_from
 from flask import abort, jsonify, request, session
+from flask_login import current_user, login_required, login_user, logout_user
 from helpers.object import check_keys, validate_object
-from models import storage
-from models.user import User
+from models import login_manager, storage
+from models.user import User, AnnonymosUser
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -50,6 +51,7 @@ def signup_user():
             "phoneNumber",
         ],
     )
+
     user = storage.get_email(User, req["email"])
     if user:
         return jsonify({"message": "this user already exists"}), 300
@@ -63,9 +65,13 @@ def signup_user():
     storage.new(instance)
     storage.save()
     uss = storage.get(User, instance.id)
-    session["user_id"] = uss.id
-    print(storage.get(User, session["user_id"]))
+    # session["user_id"] = uss.id
+    if current_user.is_authenticated:
+        logout_user()
+    login_user(uss)
+    # print(storage.get(User, session["user_id"]))
     print("=================current user ====================")
+    print(current_user)
     return jsonify({"message": "user created successfully"}), 201
 
 
@@ -94,29 +100,40 @@ def signin_user():
     if not user:
         abort(404)
     if check_password_hash(user.password, req["password"]):
-        session["user_id"] = user.id
-
+        if current_user.is_authenticated:
+            logout_user()
+        # session["user_id"] = user.id
+        login_user(user)
+        print(current_user)
         return jsonify({"message", "log in successfull"}), 200
     else:
         return jsonify({"message": "password is incorrect"}), 404
 
 
-@app_auth.route("/logout", methods=["POST"])
+@app_auth.route("/logout", methods=["GET"])
 def signout_user():
     """logout a user"""
-    print("======================loggin out user =================")
-    key = session.pop("user_id", None)
-    print(key)
+    print("====================== loggin out user =================")
+    # key = session.pop("user_id", None)
+    key = logout_user()
+    # session.clear()
+    login_user(AnnonymosUser())
+    print(current_user)
+    print("==========keyyyy============")
     if key:
         return jsonify({"message": "logged out successfully"})
+    else:
+        abort(404)
 
 
 @app_auth.route("/current_user", methods=["GET"])
 def get_current_user():
     """get current loggrd in user"""
     print("=================== get current user =================")
-    current_user = storage.get(User, session.get("user_id"))
-    if current_user:
+    # current_user = storage.get(User, session.get("user_id"))
+
+    if current_user.is_authenticated:
+        print(current_user)
         return jsonify(current_user.to_dict()), 200
     else:
-        return abort(404)
+        return jsonify({"message": "not found"}), 404
