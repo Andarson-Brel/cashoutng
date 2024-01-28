@@ -18,6 +18,7 @@ export default function DashBoard({
   transactionHistory,
   user,
   dbCoins,
+  isAdmin,
 }) {
   const coinsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,9 +54,10 @@ export default function DashBoard({
   const listCoinNames = coins.map((coin) => {
     return coin.name;
   });
+
   return (
     <div className="dashboard-cont">
-      <SideNavbar />
+      <SideNavbar user={user} />
       <div className="dashboard-main">
         <DashboardHeader pageTitle={"DashBoard"} />
         <div className="dashboard-column">

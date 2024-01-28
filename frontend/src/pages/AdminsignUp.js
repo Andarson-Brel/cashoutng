@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-export default function SignUpPage({ bankNames, bankList }) {
+export default function AdminSignUpPage({ bankNames, bankList }) {
   const [formStep, setFormStep] = useState(0);
   const [account, setAccount] = useState([]);
   const generateUniqueId = () => {
@@ -20,7 +20,8 @@ export default function SignUpPage({ bankNames, bankList }) {
     selectedBank: "",
     accountNumber: "",
     accountName: "",
-    userRole: "user",
+    isAdmin: true,
+    userRole: "admin",
     userId: generateUniqueId(),
     bankCode: "", // Add bankCode field
   };
@@ -79,7 +80,7 @@ export default function SignUpPage({ bankNames, bankList }) {
         bank: formData.selectedBank,
         accountNumber: formData.accountNumber,
         accountName: formData.accountName,
-        isAdmin: false,
+        isAdmin: true,
         username: `${formData.firstName} ${formData.lastName}`,
         // userId: formData.userId,
         // bankCode: formData.bankCode,
