@@ -3,13 +3,14 @@
 Define the User class for the 'users' table in the database.
 """
 
+from flask_login import AnonymousUserMixin, UserMixin
 from models import storage
 from models.base_model import BaseModel
 
 print("user class")
 
 
-class User(BaseModel, storage.Model):
+class User(BaseModel, UserMixin, storage.Model):
     """
     Table name in the database
 
@@ -54,3 +55,28 @@ class User(BaseModel, storage.Model):
 
     def is_anonymous(self):
         return False
+
+
+class AnnonymosUser(BaseModel, UserMixin, storage.Model):
+    """
+    Table name in the database
+
+    Attributes:
+        __tablename__ (str): The name of the database table.
+    """
+
+    __tablename__ = "annonymoususer"
+
+    def is_active(self):
+        # Define your own logic for determining if the user is active or not
+        return False
+
+    def is_authenticated(self):
+        return False
+
+    def get_id(self):
+        print("getting id")
+        return self.id
+
+    def is_anonymous(self):
+        return True
