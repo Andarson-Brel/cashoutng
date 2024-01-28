@@ -59,6 +59,8 @@ function AddCoin({ coins, coinList }) {
           setWalletAddress("");
 
           toast.success("Coin added successfully");
+          // Refresh the page
+          window.location.reload();
         } else {
           toast.error("Failed to add coin. Please try again.");
         }

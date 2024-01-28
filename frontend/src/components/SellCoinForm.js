@@ -135,6 +135,8 @@ function SellCoinForm({
         // Clear the selected coin, coinInfo, and wallet address
         toast.success("Order Successful!");
         closeModal();
+        // Refresh the page
+        window.location.reload();
       } else {
         toast.error("Error submitting transaction. Please try again.");
       }

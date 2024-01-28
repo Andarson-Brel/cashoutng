@@ -13,6 +13,7 @@ function CoinList({
   walletAddress,
   coinId,
   exchangeRate,
+  isAdmin,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedAddress, setEditedAddress] = useState(walletAddress);
@@ -86,7 +87,8 @@ function CoinList({
             <span> ₦{exchangeRate}/$</span>
           </>
         )}
-        {listType !== "price" &&
+        {isAdmin &&
+          listType !== "price" &&
           (isEditing ? (
             <Button
               buttonstyle={{

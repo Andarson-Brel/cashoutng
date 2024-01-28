@@ -10,21 +10,30 @@ import {
   menuItemStyles,
 } from "react-pro-sidebar";
 import axios from "axios";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 
 //
-export default function SideNavbar() {
+export default function SideNavbar(setUser, isAdmin) {
+  console.log("is admin", isAdmin);
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
-      // Make a POST request to the logout API endpoint
-      await axios.post("http://localhost:5000/auth/logout");
+      const response = await fetch("http://localhost:5000/auth/logout", {
+        credentials: "include",
+      });
 
-      // navigate("/");
-      // Redirect to the home page
+      const data = await response.json();
+      console.log(data);
+      // setUser(data);
+      console.log("i was clicked");
+
+      console.log("test");
+      navigate("/");
     } catch (error) {
-      console.error("Logout failed:", error);
-      // Handle error as needed
+      toast.error(error);
     }
   };
 
@@ -81,12 +90,14 @@ export default function SideNavbar() {
             </span>{" "}
             History{" "}
           </MenuItem>
-          <MenuItem component={<Link to="/customers" />}>
-            <span className="menuItemSpan">
-              <img src="/images/customers.svg" alt="customers-Icon" />
-            </span>{" "}
-            Customers
-          </MenuItem>
+          {isAdmin && (
+            <MenuItem component={<Link to="/customers" />}>
+              <span className="menuItemSpan">
+                <img src="/images/customers.svg" alt="customers-Icon" />
+              </span>{" "}
+              Customers
+            </MenuItem>
+          )}
           <MenuItem component={<Link to="/profile" />}>
             <span className="menuItemSpan">
               <img src="/images/profile.svg" alt="profile-Icon" />

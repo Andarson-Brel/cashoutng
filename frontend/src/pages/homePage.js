@@ -1,6 +1,41 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Homepage({ userData, TopNavbar }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  // console.log(email, password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Prepare data to be sent to the server
+    const data = {
+      email: email,
+      password: password,
+    };
+    console.log(data);
+    // Make a POST request to the login endpoint using Axios
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/auth/login",
+        data
+      );
+
+      if (response.status === 201) {
+        toast.success("Logged In");
+      } else {
+        toast.error("Failed to Login. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error Logging In:", error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   return (
     <>
       <header className="home-header ">
@@ -13,10 +48,22 @@ export default function Homepage({ userData, TopNavbar }) {
               can effortlessly sell over 20 cryptocurrencies paired with 20+
               fiat currencies.
             </p>
-            <form className="login-form">
-              <input type="email" placeholder="Email Address" />
-              <input type="password" placeholder="Password" />
-              <button className="login-btn">Login</button>
+            <form className="login-form" onSubmit={handleLogin}>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <button type="submit" className="login-btn">
+                Login
+              </button>
             </form>
           </div>
           <div className="hero-illustration">

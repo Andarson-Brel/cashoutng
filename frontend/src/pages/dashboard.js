@@ -19,7 +19,9 @@ export default function DashBoard({
   user,
   dbCoins,
   isAdmin,
+  setUser,
 }) {
+  
   const coinsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,7 +59,7 @@ export default function DashBoard({
 
   return (
     <div className="dashboard-cont">
-      <SideNavbar user={user} />
+      <SideNavbar user={user} setUser={setUser} isAdmin={isAdmin} />
       <div className="dashboard-main">
         <DashboardHeader pageTitle={"DashBoard"} />
         <div className="dashboard-column">
@@ -101,7 +103,7 @@ export default function DashBoard({
               headtype={"card"}
             />
 
-            <AddCoin coinList={listCoinNames} coins={coins} />
+            {isAdmin && <AddCoin coinList={listCoinNames} coins={coins} />}
             {dbCoins?.map((coin, i) => (
               <CoinList
                 coinSn={i + 1}
@@ -112,6 +114,7 @@ export default function DashBoard({
                 coinId={coin.id}
                 key={i}
                 exchangeRate={coin.exchangeRate}
+                isAdmin={isAdmin}
               />
             ))}
           </DashboardContainer>
@@ -129,6 +132,8 @@ export default function DashBoard({
           />
           <TransactionContainer
             dashboardWidth={"50%"}
+            isAdmin={isAdmin}
+            currenUser={user}
             transactionHistory={transactionHistory}
           />
         </div>

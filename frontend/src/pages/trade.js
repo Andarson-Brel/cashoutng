@@ -4,7 +4,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import BuyCoins from "../data";
 import Modal from "../components/modal";
 import TradeContainer from "../components/TradeContainer";
-function Trade({ coins, coinNames, dbCoins, user }) {
+function Trade({ coins, coinNames, dbCoins, user, setUser }) {
   const [selectedCoinWallet, setSelectedCoinWallet] = useState("");
 
   const updateSelectedCoinWallet = (walletAddress) => {
@@ -14,7 +14,7 @@ function Trade({ coins, coinNames, dbCoins, user }) {
     <div className="dashboard-cont">
       <Modal />
 
-      <SideNavbar />
+      <SideNavbar setUser={setUser} />
       <div className="dashboard-main">
         <DashboardHeader pageTitle={"Trade"} />
         <div className="trade-head">
