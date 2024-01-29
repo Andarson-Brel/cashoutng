@@ -4,12 +4,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function TransactionDetail({ transactionHistory }) {
+function TransactionDetail({ transactionHistory, isAdmin }) {
   const { id } = useParams();
   const [transaction, setTransaction] = useState([]);
-  // const transaction = transactionHistory.find(
-  //   (transaction) => transaction.id === id
-  // );
+  const [adminTransactionStatus, setAdminTransactionStatus] = useState({
+    Declined: false,
+    Approved: false,
+  });
 
   useEffect(() => {
     axios
@@ -18,34 +19,35 @@ function TransactionDetail({ transactionHistory }) {
         console.log("omo transaction");
         console.log("response:", response.data);
         setTransaction(response.data);
+        setAdminTransactionStatus({
+          Declined: response.data.status === "failure",
+          Approved: response.data.status === "success",
+        });
       })
       .catch((error) => {
         toast(error);
       });
-  }, []);
-  console.log("transaction", transaction);
-  const [adminTransactionStatus, setAdminTransactionStatus] = useState({
-    Declined: false,
-    Approved: false,
-  });
-  console.log(id);
-  const [userTransactionStatus, setUserTransactionStatus] = useState(
-    transaction?.transactionStatus
-  );
+  }, [id]);
 
-  const handleAdminTransactionStatusChange = (status) => {
-    if (!adminTransactionStatus[status]) {
-      setAdminTransactionStatus((prevStatus) => ({
-        ...prevStatus,
-        [status]: true,
+  const handleCheckboxChange = (status) => {
+    const updateData = {
+      status: status === "Approved" ? "success" : "failure",
+    };
 
-        [status === "Approved" ? "Declined" : "Approved"]: true,
-      }));
-      setUserTransactionStatus(status);
-    }
+    axios
+      .put(`http://localhost:5000/api/transaction/${id}`, updateData)
+      .then((response) => {
+        setTransaction(response.data);
+        setAdminTransactionStatus({
+          Declined: response.data.status === "failure",
+          Approved: response.data.status === "success",
+        });
+        toast(`Transaction ${status === "Approved" ? "approved" : "declined"}`);
+      })
+      .catch((error) => {
+        toast(error);
+      });
   };
-
-  console.log(transaction);
   return (
     <div>
       <div className="dashboard-cont">
@@ -98,46 +100,49 @@ function TransactionDetail({ transactionHistory }) {
                   </li>
                   <hr className="transaction-hr" />
                 </div>
-                <div className="">
-                  <li className="details-list">
-                    <span>Sender</span>{" "}
-                    <span className="transactio-value">
-                      {transaction?.user?.username}
-                    </span>
-                  </li>
-                  <hr className="transaction-hr" />
-                </div>
-                <div className="bank-details-container">
-                  <h5 className="bank-details-cont-head">Bank Detail</h5>
+                {isAdmin && (
                   <div className="">
                     <li className="details-list">
-                      <span>Bank Name</span>{" "}
+                      <span>Sender</span>{" "}
                       <span className="transactio-value">
-                        {transaction?.user?.bankName}
+                        {transaction?.user?.username}
                       </span>
                     </li>
                     <hr className="transaction-hr" />
                   </div>
-                  <div className="">
-                    <li className="details-list">
-                      <span>Account Number</span>{" "}
-                      <span className="transactio-value">
-                        {transaction?.user?.accountNumber}
-                      </span>
-                    </li>
-                    <hr className="transaction-hr" />
+                )}
+                {isAdmin && (
+                  <div className="bank-details-container">
+                    <h5 className="bank-details-cont-head">Bank Detail</h5>
+                    <div className="">
+                      <li className="details-list">
+                        <span>Bank Name</span>{" "}
+                        <span className="transactio-value">
+                          {transaction?.user?.bank}
+                        </span>
+                      </li>
+                      <hr className="transaction-hr" />
+                    </div>
+                    <div className="">
+                      <li className="details-list">
+                        <span>Account Number</span>{" "}
+                        <span className="transactio-value">
+                          {transaction?.user?.accountNumber}
+                        </span>
+                      </li>
+                      <hr className="transaction-hr" />
+                    </div>
+                    <div className="">
+                      <li className="details-list">
+                        <span>Name on Account</span>{" "}
+                        <span className="transactio-value">
+                          {transaction?.user?.accountName}
+                        </span>
+                      </li>
+                      <hr className="transaction-hr" />
+                    </div>
                   </div>
-                  <div className="">
-                    <li className="details-list">
-                      <span>Name on Account</span>{" "}
-                      <span className="transactio-value">
-                        {transaction?.user?.accountName}
-                      </span>
-                    </li>
-                    <hr className="transaction-hr" />
-                  </div>
-                </div>
-
+                )}
                 <div className="">
                   <li className="details-list">
                     <span>Screenshot</span> <span>btc</span>
@@ -151,10 +156,8 @@ function TransactionDetail({ transactionHistory }) {
                     <input
                       type="checkbox"
                       checked={adminTransactionStatus.Declined}
-                      onChange={() =>
-                        handleAdminTransactionStatusChange("Declined")
-                      }
                       disabled={adminTransactionStatus.Declined}
+                      onChange={() => handleCheckboxChange("Declined")}
                     />
                     Declined
                   </label>
@@ -162,24 +165,27 @@ function TransactionDetail({ transactionHistory }) {
                     <input
                       type="checkbox"
                       checked={adminTransactionStatus.Approved}
-                      onChange={() =>
-                        handleAdminTransactionStatusChange("Approved")
-                      }
                       disabled={adminTransactionStatus.Approved}
+                      onChange={() => handleCheckboxChange("Approved")}
                     />
                     Approved
                   </label>
                 </div>
+
                 <div
                   className={`user-transaction-status ${
-                    userTransactionStatus === "Approved"
+                    transaction.status === "success"
                       ? "approve-style"
-                      : userTransactionStatus === "Declined"
+                      : transaction.status === "failure"
                       ? "decline-style"
                       : "pending-style"
                   }`}
                 >
-                  {userTransactionStatus}
+                  {transaction.status === "success"
+                    ? "Approved"
+                    : transaction.status === "failure"
+                    ? "Declined"
+                    : "Pending"}
                 </div>
               </div>
             </div>

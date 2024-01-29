@@ -128,7 +128,7 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&locale=en&api_key=CG-8RfyawE6WFgyRVRzeTss94Rn"
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
         );
         const result = await response.json();
         setCoins(result);
@@ -221,6 +221,7 @@ function App() {
             <TransactionDetail
               transactionHistory={dataTransaction}
               setUser={setUser}
+              isAdmin={isAdmin}
             />
           }
         />

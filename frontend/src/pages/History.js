@@ -3,6 +3,7 @@ import SideNavbar from "../components/sideNavbar";
 import TransactionContainer from "../components/TransactionContainer";
 import DashboardHeader from "../components/DashboardHeader";
 function History({ transactionHistory, setUser, isAdmin, currenUser }) {
+  console.log(transactionHistory);
   return (
     <div className="dashboard-cont">
       <SideNavbar setUser={setUser} />
