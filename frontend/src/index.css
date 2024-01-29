@@ -169,6 +169,8 @@ header ul li:hover {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: relative;
+  z-index: 2;
 }
 .login-form input {
   padding: 1rem;

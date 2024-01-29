@@ -1,11 +1,11 @@
 import DashboardHeader from "../components/DashboardHeader";
 import SideNavbar from "../components/sideNavbar";
 
-function Customers({ userData }) {
+function Customers({ userData, setUser }) {
   console.log(userData);
   return (
     <div className="dashboard-cont">
-      <SideNavbar />
+      <SideNavbar setUser={setUser} />
       <div className="dashboard-main">
         <DashboardHeader pageTitle={"Customers"} />
         {console.log(userData)}

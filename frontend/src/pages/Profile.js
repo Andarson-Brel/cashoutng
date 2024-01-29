@@ -1,10 +1,10 @@
 import React from "react";
 import SideNavbar from "../components/sideNavbar";
 
-function Profile() {
+function Profile({ setUser }) {
   return (
     <div className="dashboard-cont">
-      <SideNavbar />
+      <SideNavbar setUser={setUser} />
       <div className="dashboard-main">
         <h1>Profile</h1>
       </div>

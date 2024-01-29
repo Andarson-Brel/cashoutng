@@ -1,11 +1,11 @@
 import Homepage from "./pages/homePage";
 import TopNavbar from "./components/topNavbar";
 import { Route, Routes } from "react-router-dom";
-import SignUpPgae from "./pages/signUp";
+import SignUpPage from "./pages/signUp";
 import DashBoard from "./pages/dashboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import SideNavbar from "./components/sideNavbar";
+
 import Profile from "./pages/Profile";
 import History from "./pages/History";
 import Trade from "./pages/trade";
@@ -13,6 +13,8 @@ import Customers from "./pages/Customers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TransactionDetail from "./pages/transaction-detail";
+import { useNavigate } from "react-router-dom";
+import AdminSignUpPage from "./pages/AdminsignUp";
 function App() {
   const [coins, setCoins] = useState([]);
   const [user, setUser] = useState(null);
@@ -23,7 +25,7 @@ function App() {
   const [response, setResponse] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [allCoins, setAllCoins] = useState([]);
-
+  const Navigate = useNavigate();
   const [testCoin, setTestCoin] = useState([]);
   // get bank details
   useEffect(() => {
@@ -33,7 +35,7 @@ function App() {
         setBankList(response.data);
       })
       .catch((error) => {
-        toast(error);
+        toast("Failed to fetch");
       });
   }, []);
 
@@ -53,10 +55,10 @@ function App() {
           const data = await response.json();
           setUser(data);
         } else {
-          toast.error(`Error: ${response.status} - ${response.statusText}`);
+          console.error(`Error: no current user"`);
         }
       } catch (error) {
-        toast.error(error);
+        console.log("no current user", error);
       }
     };
 
@@ -65,12 +67,9 @@ function App() {
 
   // get transactionHistory
   useEffect(() => {
-    console.log("helo");
     axios
       .get("http://localhost:5000/api/transactions")
       .then((response) => {
-        console.log("omo");
-        console.log("response:", response);
         setDataTransaction(response.data);
       })
       .catch((error) => {
@@ -96,7 +95,7 @@ function App() {
     axios
       .get("http://localhost:5000/api/users")
       .then((response) => {
-        setUserData(response.data[0]);
+        setUserData(response.data);
       })
       .catch((error) => {
         toast(error);
@@ -106,14 +105,25 @@ function App() {
     axios
       .get("http://localhost:5000/api/users")
       .then((response) => {
-        setAllUsers(response.data[0]);
+        setAllUsers(response.data);
       })
       .catch((error) => {
         toast(error);
       });
   }, []);
+  useEffect(() => {
+    if (user) {
+      Navigate("/dashboard");
+      console.log("navit");
+    }
+  }, []);
 
-  // get coins from coingecko api
+  // useEffect(() => {
+  //   if (user == null) {
+  //     Navigate("/");
+  //   }
+  // }, [Navigate, user]);
+  // get coinsn from coingecko api
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -139,13 +149,11 @@ function App() {
   const coinNames = allCoins?.map((coin) => {
     return coin.name;
   });
-
-  // // bankNames.push("Opay");
-  // console.log("all coind:", allCoins);
-  // console.log("all users", allUsers);
+  const isAdmin = user?.isAdmin;
+  console.log("current User:", user);
   // console.log("all transactions", dataTransaction);
-  // console.log("all data", userData);
-  console.log("current user", user);
+  console.log("all data", userData);
+  // console.log("current user", user);
 
   return (
     <>
@@ -157,41 +165,63 @@ function App() {
         />
         <Route
           path="Sign-up"
-          element={<SignUpPgae bankNames={bankNames} bankList={bankList} />}
+          element={<SignUpPage bankNames={bankNames} bankList={bankList} />}
         />
         <Route
-          path="Dashboard"
+          path="AdminSignUp"
+          element={
+            <AdminSignUpPage bankNames={bankNames} bankList={bankList} />
+          }
+        />
+        <Route
+          path="dashboard"
           element={
             <DashBoard
+              isAdmin={isAdmin}
               coins={coins}
               dbCoins={allCoins}
               coinNames={coinNames}
               transactionHistory={dataTransaction}
               user={user}
+              setUser={setUser}
             />
           }
         />
         <Route path="profile" element={<Profile />} />
         <Route
           path="history"
-          element={<History transactionHistory={dataTransaction} />}
+          element={
+            <History
+              transactionHistory={dataTransaction}
+              setUser={setUser}
+              isAdmin={isAdmin}
+              currenUser={user}
+            />
+          }
         />
         <Route
-          path="Trade"
+          path="trade"
           element={
             <Trade
               coins={coins}
               coinNames={coinNames}
               dbCoins={allCoins}
               user={user}
+              setUser={setUser}
             />
           }
         />
-        <Route path="customers" element={<Customers userData={allUsers} />} />
+        <Route
+          path="customers"
+          element={<Customers userData={allUsers} setUser={setUser} />}
+        />
         <Route
           path="transaction/:id"
           element={
-            <TransactionDetail transactionHistory={transactionHistory} />
+            <TransactionDetail
+              transactionHistory={dataTransaction}
+              setUser={setUser}
+            />
           }
         />
       </Routes>
