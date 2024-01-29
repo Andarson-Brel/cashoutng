@@ -9,7 +9,7 @@ from flask import abort, jsonify, request, session
 from flask_login import current_user, login_required, login_user, logout_user
 from helpers.object import check_keys, validate_object
 from models import login_manager, storage
-from models.user import User, AnnonymosUser
+from models.user import AnnonymosUser, User
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -96,16 +96,19 @@ def signin_user():
             "password",
         ],
     )
-    user = storage.get_email(req["email"])
+    user = storage.get_email(User, req["email"])
     if not user:
         abort(404)
     if check_password_hash(user.password, req["password"]):
         if current_user.is_authenticated:
+            print("user is authenticated")
             logout_user()
         # session["user_id"] = user.id
+
         login_user(user)
-        print(current_user)
-        return jsonify({"message", "log in successfull"}), 200
+        print("=========================================")
+        # print(current_user)
+        return jsonify({"message": "log in successfull"}), 200
     else:
         return jsonify({"message": "password is incorrect"}), 404
 

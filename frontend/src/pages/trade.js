@@ -6,7 +6,9 @@ import Modal from "../components/modal";
 import TradeContainer from "../components/TradeContainer";
 function Trade({ coins, coinNames, dbCoins, user, setUser }) {
   const [selectedCoinWallet, setSelectedCoinWallet] = useState("");
-
+  console.log("------------------------------------------");
+  console.log(user);
+  console.log("------------------------------------------");
   const updateSelectedCoinWallet = (walletAddress) => {
     setSelectedCoinWallet(walletAddress);
   };

@@ -43,6 +43,9 @@ function App() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
+        console.log(
+          "=====================getting current user ================="
+        );
         const response = await fetch(
           "http://localhost:5000/auth/current_user",
           { credentials: "include" }

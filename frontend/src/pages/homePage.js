@@ -26,7 +26,7 @@ export default function Homepage({ userData, TopNavbar }) {
         data
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success("Logged In");
       } else {
         toast.error("Failed to Login. Please try again.");
