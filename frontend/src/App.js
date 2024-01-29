@@ -41,6 +41,9 @@ function App() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
+        console.log(
+          "=====================getting current user ================="
+        );
         const response = await fetch(
           "http://localhost:5000/auth/current_user",
           { credentials: "include" }
@@ -140,8 +143,8 @@ function App() {
   // // bankNames.push("Opay");
   // console.log("all coind:", allCoins);
   // console.log("all users", allUsers);
-  console.log("all transactions", dataTransaction);
-  console.log("all data", userData);
+  // console.log("all transactions", dataTransaction);
+  // console.log("all data", userData);
   console.log("current user", user);
 
   return (
