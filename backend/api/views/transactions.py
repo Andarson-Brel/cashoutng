@@ -56,8 +56,8 @@ def get_one_transaction(transaction_id):
         tran: dict = transaction.to_dict()
         tran["user"] = transaction.user.to_dict()
         tran["coin"] = transaction.coin.to_dict()
-        del transaction["coinId"]
-        del transaction["userId"]
+        del tran["coinId"]
+        del tran["userId"]
         return jsonify(tran), 200
 
     return abort(404)

@@ -12,6 +12,7 @@ function TradeContainer({
   dbCoins,
   user,
 }) {
+
   return (
     <DashboardContainer width={dashboardWidth}>
       <CardHeading cardTitle={cardTitle} headtype={headtype} />

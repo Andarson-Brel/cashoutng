@@ -21,13 +21,6 @@ export default function SideNavbar(setUser, isAdmin) {
 
   const handleLogout = async () => {
     try {
-<<<<<<< HEAD
-      // Make a POST request to the logout API endpoint
-      await axios.get("http://localhost:5000/auth/logout");
-      console.log("===================loggin out user =================");
-      navigate("/");
-      // Redirect to the home page
-=======
       const response = await fetch("http://localhost:5000/auth/logout", {
         credentials: "include",
       });
@@ -39,7 +32,6 @@ export default function SideNavbar(setUser, isAdmin) {
 
       console.log("test");
       navigate("/");
->>>>>>> 97e019c03d03e9075afa72924d1fd8af2bcc2e7f
     } catch (error) {
       toast.error(error);
     }
