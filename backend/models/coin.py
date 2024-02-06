@@ -26,3 +26,4 @@ class Coin(BaseModel, storage.Model):
     abv = storage.Column(storage.String(20), nullable=False)
     exchangeRate = storage.Column(storage.Float, nullable=False)
     walletAddress = storage.Column(storage.String(128), nullable=False)
+    networkType = storage.Column(storage.String(255), nullable=False)
