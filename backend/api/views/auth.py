@@ -71,7 +71,7 @@ def signup_user():
     login_user(uss)
     # print(storage.get(User, session["user_id"]))
     print("=================current user ====================")
-    print(current_user)
+    # print(current_user)
     return jsonify({"message": "user created successfully"}), 201
 
 
@@ -106,6 +106,7 @@ def signin_user():
         # session["user_id"] = user.id
 
         login_user(user)
+        print(current_user)
         print("=========================================")
         # print(current_user)
         return jsonify({"message": "log in successfull"}), 200
@@ -134,9 +135,8 @@ def get_current_user():
     """get current loggrd in user"""
     print("=================== get current user =================")
     # current_user = storage.get(User, session.get("user_id"))
-
     if current_user.is_authenticated:
-        print(current_user)
+        print(current_user.to_dict())
         return jsonify(current_user.to_dict()), 200
     else:
         return jsonify({"message": "not found"}), 404

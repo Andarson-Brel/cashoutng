@@ -21,6 +21,10 @@ export default function Homepage({ userData, TopNavbar }) {
     // Make a POST request to the login endpoint using Axios
 
     try {
+      axios.interceptors.request.use((config) => {
+        config.withCredentials = true;
+        return config;
+      });
       const response = await axios.post(
         "http://localhost:5000/auth/login",
         data
